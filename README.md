@@ -8,9 +8,9 @@ Technologijos:
 - ASP.NET karkasas
 - SignalR biblioteka
 
-Reikalavimaiž
+Reikalavimai
 =============
-Paspaudus atitinkamo bokšto ikoną ir pasirinkus atitinkamą vietovę paspaudus bokštas pastatomas.
+Paspaudus atitinkamo bokšto ikoną ir pasirinkus atitinkamą vietovę paspaudus bokštas pastatomas.  
 Paspaudus atitinkamo priešo ikoną priešas iškviečiamas kelio pradžioje ir keliauja link galutinio tikslo.
 Bokštai automatiškai puola priešus.
 Žaidėjai turi galimybę aktyvuoti pastiprinimo bei pasilpninimo efektus.
