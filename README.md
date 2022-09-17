@@ -1,14 +1,14 @@
 ﻿# TOWER DEFENSE THE GAME BY AAAA
 Asimetrinis bokštų gynimo žaidimas kur vienas žaidėjas gyna miestą statant bokštus, o kitas atakuoja miestą siunčiant priešu bangas.
 
-=============
+Markup :  =============
 Technologijos:
 
 - C# kalba
 - ASP.NET karkasas
 - SignalR biblioteka
 
-=============
+Markup :  =============
 Reikalavimai
 
 Paspaudus atitinkamo bokšto ikoną ir pasirinkus atitinkamą vietovę paspaudus bokštas pastatomas.
@@ -26,7 +26,7 @@ Kas 15 sekundčių puolėjas gauną po 100 pinigų.
 Gynėjas pradeda žaidimą su 500 pinigų.
 Gynėjas pradeda su 150 gyvybių.
 
-=============
+Markup :  =============
 Priešai, bokštai ir žemėlapiai
 
 Pirmasis priešų tipas turi 50 gyvybių ir 20 atakos taškų.
