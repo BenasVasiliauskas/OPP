@@ -42,4 +42,4 @@ Priešai, bokštai ir žemėlapiai
 
 Panaudojimo atvejų diagrama
 =============
-![image](files://C:/Users/arnas/Desktop/Model.jpg)
+![alt text](https://github.com/BenasVasiliauskas/OPP/blob/main/Diagramos/Model.jpg?raw=true)
