@@ -28,17 +28,25 @@ Reikalavimai
 
 Priešai, bokštai ir žemėlapiai
 =============
-- Pirmasis priešų tipas turi 50 gyvybių ir 20 atakos taškų.
-- Antrasis priešo tipas turi 15 gyvybių taškų ir 3 atakos taškus, jis taip pat ir gydo aplink jį esančius sąjungininkus.
-- Trečiasis priešo tipas turi 2 gyvybių taškus ir 0 atakos taškų, jis kiekvieną sekundę kol nemiršta generuoja 3.1452 pinigų puolėjui.- 
+>- Pirmasis priešų tipas turi 50 gyvybių ir 20 atakos taškų.
+>- Antrasis priešo tipas turi 15 gyvybių taškų ir 3 atakos taškus, jis taip pat ir gydo aplink jį esančius sąjungininkus.
+>- Trečiasis priešo tipas turi 2 gyvybių taškus ir 0 atakos taškų, jis kiekvieną sekundę kol nemiršta generuoja 3.1452 pinigų puolėjui.
 
-- Pirmasis bokšto tipas kainuoja 150 pinigų ir atakuoja vienas šūvis per sekundę greičiu arčiausiai esantį prieša.
-- Antrasis bokšto tipas kainuoja 450 pinigų ir atakuoja kas 3 sekundes visus jo diapazone esančius priešus.
-- Trečiasis bokšto tipas kainuoja 999 pinigų kol jis aktyvus gynėjas gauna 15 pinigų per sekundę.- 
+>- Pirmasis bokšto tipas kainuoja 150 pinigų ir atakuoja vienas šūvis per sekundę greičiu arčiausiai esantį prieša.
+>- Antrasis bokšto tipas kainuoja 450 pinigų ir atakuoja kas 3 sekundes visus jo diapazone esančius priešus.
+>- Trečiasis bokšto tipas kainuoja 999 pinigų kol jis aktyvus gynėjas gauna 15 pinigų per sekundę.
 
-- Pirmasis žemėlapis turi paprastą topologija.
-- Antrasis žemėlapis turi keletą vandens telkinių kur gynėjas negali dėti bokštų.
-- Trečiasis žemėlapis turi vietas kur priešai palėtėja.
+>- Pirmasis žemėlapis turi paprastą topologija.
+>- Antrasis žemėlapis turi keletą vandens telkinių kur gynėjas negali dėti bokštų.
+>- Trečiasis žemėlapis turi vietas kur priešai palėtėja.
+
+Stiprinantys ir silpninantys efektai
+=============
+>- Pirmasis stiprinantis efektas pagreitina bokštų atakas.
+>- Antrasis stiprinantis efektas pagreitina priešų ėjimo greitį.
+
+>- Pirmasis silpninantis efektas sulėtina bokštų atakas.
+>- Antrasis silpninantis efektas sulėtina priešų ėjimo greitį.
 
 Panaudojimo atvejų diagrama
 =============
