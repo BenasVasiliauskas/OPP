@@ -39,3 +39,7 @@ Priešai, bokštai ir žemėlapiai
 - Pirmasis žemėlapis turi paprastą topologija.
 - Antrasis žemėlapis turi keletą vandens telkinių kur gynėjas negali dėti bokštų.
 - Trečiasis žemėlapis turi vietas kur priešai palėtėja.
+
+Panaudojimo atvejų diagrama
+=============
+![image](files://C:/Users/arnas/Desktop/Model.jpg)
