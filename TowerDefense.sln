@@ -1,0 +1,59 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32328.378
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TowerDefense.Client", "TowerDefense.Client\TowerDefense.Client.csproj", "{9B11DF71-879D-4561-9BB8-FEEA055F661E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TowerDefense.Server", "TowerDefense.Server\TowerDefense.Server.csproj", "{C6809010-55F6-4CDA-867A-5A1619F0ECD3}"
+EndProject
+Project("{911E67C6-3D85-4FCE-B560-20A9C3E3FF48}") = "TowerDefense.Client1", "TowerDefense.Client\bin\Debug\net6.0-windows\TowerDefense.Client1.exe", "{9E5C20B0-422C-4064-A9FC-969404DE2D17}"
+	ProjectSection(DebuggerProjectSystem) = preProject
+		PortSupplier = 00000000-0000-0000-0000-000000000000
+		Executable = C:\Users\arnas\Desktop\TowerDefense\TowerDefense.Client\bin\Debug\net6.0-windows\TowerDefense.Client1.exe
+		RemoteMachine = MSI
+		StartingDirectory = C:\Users\arnas\Desktop\TowerDefense\TowerDefense.Client\bin\Debug\net6.0-windows
+		Environment = Default
+		LaunchingEngine = 00000000-0000-0000-0000-000000000000
+		UseLegacyDebugEngines = No
+		LaunchSQLEngine = No
+		AttachLaunchAction = No
+		IORedirection = Auto
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9B11DF71-879D-4561-9BB8-FEEA055F661E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B11DF71-879D-4561-9BB8-FEEA055F661E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B11DF71-879D-4561-9BB8-FEEA055F661E}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9B11DF71-879D-4561-9BB8-FEEA055F661E}.Debug|x64.Build.0 = Debug|Any CPU
+		{9B11DF71-879D-4561-9BB8-FEEA055F661E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B11DF71-879D-4561-9BB8-FEEA055F661E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B11DF71-879D-4561-9BB8-FEEA055F661E}.Release|x64.ActiveCfg = Release|Any CPU
+		{9B11DF71-879D-4561-9BB8-FEEA055F661E}.Release|x64.Build.0 = Release|Any CPU
+		{C6809010-55F6-4CDA-867A-5A1619F0ECD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6809010-55F6-4CDA-867A-5A1619F0ECD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6809010-55F6-4CDA-867A-5A1619F0ECD3}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C6809010-55F6-4CDA-867A-5A1619F0ECD3}.Debug|x64.Build.0 = Debug|Any CPU
+		{C6809010-55F6-4CDA-867A-5A1619F0ECD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6809010-55F6-4CDA-867A-5A1619F0ECD3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6809010-55F6-4CDA-867A-5A1619F0ECD3}.Release|x64.ActiveCfg = Release|Any CPU
+		{C6809010-55F6-4CDA-867A-5A1619F0ECD3}.Release|x64.Build.0 = Release|Any CPU
+		{9E5C20B0-422C-4064-A9FC-969404DE2D17}.Debug|Any CPU.ActiveCfg = Release|x64
+		{9E5C20B0-422C-4064-A9FC-969404DE2D17}.Debug|x64.ActiveCfg = Release|x64
+		{9E5C20B0-422C-4064-A9FC-969404DE2D17}.Release|Any CPU.ActiveCfg = Release|x64
+		{9E5C20B0-422C-4064-A9FC-969404DE2D17}.Release|x64.ActiveCfg = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3CC5F3FA-2D8E-48BF-895E-0C21D772C410}
+	EndGlobalSection
+EndGlobal

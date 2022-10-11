@@ -1,0 +1,30 @@
+﻿<Window x:Class="TowerDefense.Client.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:TowerDefense.Client"
+        mc:Ignorable="d" FontSize="24"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Vertical" Grid.Row="2" HorizontalAlignment="Center">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Label>Type in your username:</Label>
+                <TextBox x:Name="userName" MinWidth="200"></TextBox>
+            </StackPanel>
+            <Button x:Name="connect" Click="connect_Click">Start Game</Button>
+        </StackPanel>
+        <ScrollViewer Grid.Row="3">
+            <ListBox x:Name="messages" HorizontalAlignment="Stretch">
+            </ListBox>
+        </ScrollViewer>
+    </Grid>
+</Window>
