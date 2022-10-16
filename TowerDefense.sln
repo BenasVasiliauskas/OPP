@@ -7,12 +7,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TowerDefense.Client", "Towe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TowerDefense.Server", "TowerDefense.Server\TowerDefense.Server.csproj", "{C6809010-55F6-4CDA-867A-5A1619F0ECD3}"
 EndProject
-Project("{911E67C6-3D85-4FCE-B560-20A9C3E3FF48}") = "TowerDefense.Client1", "TowerDefense.Client\bin\Debug\net6.0-windows\TowerDefense.Client1.exe", "{9E5C20B0-422C-4064-A9FC-969404DE2D17}"
+Project("{911E67C6-3D85-4FCE-B560-20A9C3E3FF48}") = "TowerDefense.Client1", "TowerDefense.Client\bin\Debug\net6.0-windows\TowerDefense.Client1.exe", "{43E7A6C2-E181-42DF-B122-3B5E70FC6D44}"
 	ProjectSection(DebuggerProjectSystem) = preProject
 		PortSupplier = 00000000-0000-0000-0000-000000000000
-		Executable = C:\Users\arnas\Desktop\TowerDefense\TowerDefense.Client\bin\Debug\net6.0-windows\TowerDefense.Client1.exe
+		Executable = D:\KTU\IV\I_OOP\TowerDefense.Client\bin\Debug\net6.0-windows\TowerDefense.Client1.exe
 		RemoteMachine = MSI
-		StartingDirectory = C:\Users\arnas\Desktop\TowerDefense\TowerDefense.Client\bin\Debug\net6.0-windows
+		StartingDirectory = D:\KTU\IV\I_OOP\TowerDefense.Client\bin\Debug\net6.0-windows
 		Environment = Default
 		LaunchingEngine = 00000000-0000-0000-0000-000000000000
 		UseLegacyDebugEngines = No
@@ -45,10 +45,10 @@ Global
 		{C6809010-55F6-4CDA-867A-5A1619F0ECD3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C6809010-55F6-4CDA-867A-5A1619F0ECD3}.Release|x64.ActiveCfg = Release|Any CPU
 		{C6809010-55F6-4CDA-867A-5A1619F0ECD3}.Release|x64.Build.0 = Release|Any CPU
-		{9E5C20B0-422C-4064-A9FC-969404DE2D17}.Debug|Any CPU.ActiveCfg = Release|x64
-		{9E5C20B0-422C-4064-A9FC-969404DE2D17}.Debug|x64.ActiveCfg = Release|x64
-		{9E5C20B0-422C-4064-A9FC-969404DE2D17}.Release|Any CPU.ActiveCfg = Release|x64
-		{9E5C20B0-422C-4064-A9FC-969404DE2D17}.Release|x64.ActiveCfg = Release|x64
+		{43E7A6C2-E181-42DF-B122-3B5E70FC6D44}.Debug|Any CPU.ActiveCfg = Release
+		{43E7A6C2-E181-42DF-B122-3B5E70FC6D44}.Debug|x64.ActiveCfg = Release
+		{43E7A6C2-E181-42DF-B122-3B5E70FC6D44}.Release|Any CPU.ActiveCfg = Release
+		{43E7A6C2-E181-42DF-B122-3B5E70FC6D44}.Release|x64.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
