@@ -1,5 +1,5 @@
 # TOWER DEFENSE THE GAME BY AAAA
-Asimetrinis bokštų gynimo žaidimas kur vienas žaidėjas gyna miestą statant bokštus, o kitas atakuoja miestą siunčiant priešu bangas.
+Asimetrinis bokštų gynimo žaidimas kur vienas žaidėjas gina miestą statant bokštus, o kitas atakuoja miestą siunčiant priešu bangas.
 
 
 Technologijos:
