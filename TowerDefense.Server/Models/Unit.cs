@@ -2,11 +2,13 @@
 {
     public class Unit
     {
-        public Unit(string name, IMovementStrategy movement, IAttackStrategy attack)
+        public double Speed { get; set; }
+        public UnitStrategy UnitStrategy { get; set; }
+
+
+        public Unit(string name)
         {
             this.name = name;
-            this.movementStrategy = movement;
-            this.attackStrategy = attack;
         }
 
         string name = "";
@@ -27,28 +29,15 @@
         }
 
 
-        // Strategy related methods
-        private IMovementStrategy movementStrategy;
-        private IAttackStrategy attackStrategy;
-
-        public void Move()
+        public UnitStrategy GetUnitStrategy()
         {
-            //
+            return UnitStrategy;
         }
 
-        public void Attack()
+        public void SetUnitStrategy(UnitStrategy UnitStrategy, Unit unit)
         {
-            //
-        }
-
-        public void SetMovementStrategy(IMovementStrategy movementStrategy)
-        {
-            this.movementStrategy = movementStrategy;
-        }
-
-        public void SetAttackStrategy(IAttackStrategy attackStrategy)
-        {
-            this.attackStrategy = attackStrategy;
+            this.UnitStrategy = UnitStrategy;
+            this.UnitStrategy.Act(unit);
         }
     }
 }
