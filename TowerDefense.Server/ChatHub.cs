@@ -20,5 +20,31 @@ namespace TowerDefense.Server
                 await Clients.Clients(session.GetSessionIds()).SendAsync("GameStarted");
             }
         }
+
+        public async Task BuildTower(double x, double y, string levelName)
+        {
+            Creator creator = new LevelCreator();
+            Level level = creator.FactoryMethod(levelName);
+
+            AbstractFactory unitFactory = level.getAbstractFactory();
+
+            Unit tower = unitFactory.createTower("S");
+
+            await Clients.All.SendAsync("TowerBuilt", x, y, tower);
+        }
+
+        public async Task CreateEnemy(string levelName)
+        {
+            Creator creator = new LevelCreator();
+            Level level = creator.FactoryMethod(levelName);
+
+            AbstractFactory unitFactory = level.getAbstractFactory();
+
+            Unit enemy = unitFactory.createEnemy("B");
+            enemy.Color = "green";
+            enemy.Speed = 100;
+
+            await Clients.All.SendAsync("EnemyCreated", enemy);
+        }
     }
 }

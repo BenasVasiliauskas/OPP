@@ -4,6 +4,8 @@
     {
         public WaterTowerSingleShotMedium(string name) : base(name)
         {
+            Name = name;
+            Color = "Blue";
         }
     }
 }
