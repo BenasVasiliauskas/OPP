@@ -1,6 +1,6 @@
 ﻿namespace TowerDefense.Server.Models
 {
-    public class Unit
+    public class Unit : Observer.Observer
     {
         public double Speed { get; set; }
         public UnitStrategy UnitStrategy { get; set; }
@@ -38,6 +38,11 @@
         {
             this.UnitStrategy = UnitStrategy;
             this.UnitStrategy.Act(unit);
+        }
+
+        public override void UpdateUnits()
+        {
+            throw new NotImplementedException();
         }
     }
 }
