@@ -40,7 +40,7 @@ namespace TowerDefense.Client
             {
                 game.Text = "GAME WILL START SOON";
                 await Wait();
-                this.Content = new UserControl2();
+                this.Content = new UserControl2(connection);
             });
         }
 

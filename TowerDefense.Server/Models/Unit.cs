@@ -4,11 +4,14 @@
     {
         public double Speed { get; set; }
         public UnitStrategy UnitStrategy { get; set; }
+        public string Name { get; set; }
+        public string Color { get; set; }
 
 
         public Unit(string name)
         {
             this.name = name;
+            Name = name;
         }
 
         string name = "";

@@ -4,6 +4,8 @@
     {
         public WaterTowerAOEMedium(string name) : base(name)
         {
+            Name = name;
+            Color = "Blue";
         }
     }
 }

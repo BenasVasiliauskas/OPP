@@ -1,8 +1,8 @@
 ﻿namespace TowerDefense.Server.Models
 {
-    public class WaterLevel
+    public class WaterLevel : Level
     {
-        public AbstractFactory getAbstractFactory()
+        public override AbstractFactory getAbstractFactory()
         {
             return new WaterFactory();
         }

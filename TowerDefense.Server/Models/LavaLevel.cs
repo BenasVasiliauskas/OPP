@@ -1,8 +1,8 @@
 ﻿namespace TowerDefense.Server.Models
 {
-    public class LavaLevel
+    public class LavaLevel : Level
     {
-        public AbstractFactory getAbstractFactory()
+        public override AbstractFactory getAbstractFactory()
         {
             return new LavaFactory();
         }

@@ -1,8 +1,8 @@
 ﻿namespace TowerDefense.Server.Models
 {
-    public class DesertLevel
+    public class DesertLevel : Level
     {
-        public AbstractFactory getAbstractFactory()
+        public override AbstractFactory getAbstractFactory()
         {
             return new DesertFactory();
         }

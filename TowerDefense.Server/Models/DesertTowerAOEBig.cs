@@ -4,6 +4,8 @@
     {
         public DesertTowerAOEBig(string name) : base(name)
         {
+            Name = name;
+            Color = "Yellow";
         }
     }
 }

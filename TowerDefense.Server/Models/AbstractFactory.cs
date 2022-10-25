@@ -4,6 +4,6 @@
     {
         public abstract Unit createTower(string type);
 
-        public abstract  Unit createEnemy(string type);
+        public abstract Unit createEnemy(string type);
     }
 }
