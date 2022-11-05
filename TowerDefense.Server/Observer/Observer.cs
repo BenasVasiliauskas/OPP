@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TowerDefense.Server.Models
+namespace TowerDefense.Server.Observers
 {
-    public abstract class Creator
+    public abstract class Observer
     {
-        public abstract Level FactoryMethod(string level);
+        public abstract void Update();
     }
 }

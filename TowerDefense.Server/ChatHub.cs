@@ -1,50 +1,83 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using TowerDefense.Server.Models;
+using TowerDefense.Server.Models.Levels;
+using TowerDefense.Server.Models.Levels.Map;
 
 namespace TowerDefense.Server
 {
     public class ChatHub : Hub
     {
+        private readonly GameSession _gameSession = GameSession.GetIstance();
         public async Task SendMessage(string message)
         {
-            var session = GameSession.GetIstance();
-
-            var gameStarted = session.AddPlayer(new Player { ConnectionId = Context.ConnectionId, Username = message });
-
-            var sessionUsernames = session.GetSessionPlayers().Select(p => p.Username).ToList();
-
-
-            await Clients.All.SendAsync("PlayerJoined", sessionUsernames);
-            if (gameStarted)
+            if (!_gameSession.IsGameStarted)
             {
-                await Clients.Clients(session.GetSessionIds()).SendAsync("GameStarted");
+                _gameSession.AddPlayer(new Player
+                {
+                    ConnectionId = Context.ConnectionId,
+                    Username = message
+                });
+
+                var sessionUsernames = _gameSession.GetSessionPlayers()
+                    .Select(p => p.Username)
+                    .ToList();
+
+                await Clients.All.SendAsync("PlayerJoined", sessionUsernames);
+
+                if (_gameSession.IsGameStarted)
+                {
+                    var creator = new LevelCreator();
+                    AbstractFactory abstractFactory = creator.FactoryMethod(_gameSession.CurrentGameLevel).GetAbstractFactory();
+                    Map map = abstractFactory.CreateMap();
+
+                    await Clients.Clients(_gameSession.GetSessionIds()).SendAsync("GameStarted", map);
+                }
+            }
+            else
+            {
+                await Clients.Caller.SendAsync("FullLobby");
             }
         }
 
-        public async Task BuildTower(double x, double y, string levelName)
+        public async Task CreateTower(string towerType, int x, int y)
         {
-            Creator creator = new LevelCreator();
-            Level level = creator.FactoryMethod(levelName);
+            var creator = new LevelCreator();
+            AbstractFactory unitFactory = creator.FactoryMethod(_gameSession.CurrentGameLevel).GetAbstractFactory();
 
-            AbstractFactory unitFactory = level.getAbstractFactory();
+            Unit tower = unitFactory.CreateTower(towerType);
+            tower.Level = null;
 
-            Unit tower = unitFactory.createTower("S");
-
-            await Clients.All.SendAsync("TowerBuilt", x, y, tower);
+            await Clients.Caller.SendAsync("TowerBuilt", tower, x, y);
         }
 
-        public async Task CreateEnemy(string levelName)
+        public async Task CreateEnemy(string enemyType)
         {
-            Creator creator = new LevelCreator();
-            Level level = creator.FactoryMethod(levelName);
+            var creator = new LevelCreator();
+            AbstractFactory unitFactory = creator.FactoryMethod(_gameSession.CurrentGameLevel).GetAbstractFactory();
 
-            AbstractFactory unitFactory = level.getAbstractFactory();
+            Unit enemy = unitFactory.CreateEnemy(enemyType);
+            enemy.Level = null;
 
-            Unit enemy = unitFactory.createEnemy("B");
-            enemy.Color = "green";
-            enemy.Speed = 100;
+            _gameSession.Subject.Attach(enemy);
 
-            await Clients.All.SendAsync("EnemyCreated", enemy);
+            await Clients.Others.SendAsync("EnemyCreated", enemy);
+        }
+
+        public async Task ChangeLevel()
+        {
+            _gameSession.ChangeLevel();
+
+            await Clients.All.SendAsync("LevelChanged", _gameSession.CurrentGameLevel);
+        }
+
+        public async Task GameTimerTick()
+        {
+            await Clients.All.SendAsync("Ticked", _gameSession.GetSessionPlayers()[0]);
+        }
+
+        public async Task PowerUp()
+        {
+            _gameSession.Subject.IncreasePower();
         }
     }
 }

@@ -1,46 +1,32 @@
-﻿namespace TowerDefense.Server.Models
+﻿using TowerDefense.Server.Models.Levels;
+using TowerDefense.Server.Observers;
+
+namespace TowerDefense.Server.Models
 {
-    public class Unit
+    public class Unit : Observer
     {
         public double Speed { get; set; }
-        public UnitStrategy UnitStrategy { get; set; }
+        public UnitStrategy UnitStrategy { get; private set; }
         public string Name { get; set; }
         public string Color { get; set; }
+        public ILevel Level { get; set; }
+        public string ImageSource { get; set; }
+        public int Health { get; set; }
 
-
-        public Unit(string name)
+        public Unit(ILevel level)
         {
-            this.name = name;
-            Name = name;
-        }
-
-        string name = "";
-
-        public void SayHello()
-        {
-            Console.WriteLine();
-        }
-
-        public string GetName()
-        {
-            return name;
-        }
-
-        public void SetName(string name)
-        {
-            this.name = name;
-        }
-
-
-        public UnitStrategy GetUnitStrategy()
-        {
-            return UnitStrategy;
+            Level = level;
         }
 
         public void SetUnitStrategy(UnitStrategy UnitStrategy, Unit unit)
         {
             this.UnitStrategy = UnitStrategy;
             this.UnitStrategy.Act(unit);
+        }
+
+        public override void Update()
+        {
+            
         }
     }
 }

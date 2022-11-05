@@ -1,4 +1,6 @@
 ﻿using TowerDefense.Server.Models;
+using TowerDefense.Server.Models.Levels;
+using TowerDefense.Server.Observers;
 
 namespace TowerDefense.Server
 {
@@ -6,6 +8,15 @@ namespace TowerDefense.Server
     {
         private static GameSession _instance = new GameSession();
         private List<Player> _players;
+        public Subject Subject { get; set; } = new();
+
+        private List<string> _levels = new()
+        {
+            "water", "lava", "desert"
+        };
+
+        public bool IsGameStarted { get; set; }
+        public string CurrentGameLevel { get; set; }
         private GameSession()
         {
             _players = new List<Player>();
@@ -16,15 +27,14 @@ namespace TowerDefense.Server
             return _instance;
         }
 
-        public bool AddPlayer(Player player)
+        public void AddPlayer(Player player)
         {
             _players.Add(player);
 
             if(_players.Count == 2)
             {
-                return true;
+                StartGame();
             }
-            return false;
         }
 
         public List<string> GetSessionIds()
@@ -35,6 +45,26 @@ namespace TowerDefense.Server
         public List<Player> GetSessionPlayers()
         {
             return _players;
+        }
+
+        private void StartGame()
+        {
+            IsGameStarted = true;
+            CurrentGameLevel = _levels[0];
+        }
+
+        public void ChangeLevel()
+        {
+            var index = _levels.IndexOf(CurrentGameLevel);
+
+            if(index == _levels.Count - 1)
+            {
+                CurrentGameLevel = _levels[0];
+            }
+            else
+            {
+                CurrentGameLevel = _levels[index + 1];
+            }
         }
     }
 }

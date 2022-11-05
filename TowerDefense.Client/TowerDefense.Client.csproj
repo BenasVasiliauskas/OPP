@@ -7,11 +7,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\Enemies\man-with-gun.png" />
+    <None Remove="Images\Paths\grass.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="6.0.9" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\TowerDefense.Server\TowerDefense.Server.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Images\Enemies\man-with-gun.png" />
+    <Resource Include="Images\Paths\grass.jpg" />
   </ItemGroup>
 
 </Project>
