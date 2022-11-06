@@ -4,5 +4,6 @@
     {
         public List<Coordinate> Path { get; set; }
         public string PathImageSource { get; set; }
+        public List<Interval> Move { get; set; }
     }
 }

@@ -6,6 +6,8 @@ namespace TowerDefense.Server.Models.Enemies
     {
         public HealingEnemy(ILevel level) : base(level)
         {
+            ImageSource = "/Images/Enemies/priest.png";
+            Speed = 1;
         }
     }
 }

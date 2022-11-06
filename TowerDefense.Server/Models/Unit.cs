@@ -5,6 +5,9 @@ namespace TowerDefense.Server.Models
 {
     public class Unit : Observer
     {
+        public double X { get; set; }
+        public double Y { get; set; }
+        public bool IsInGame { get; set; }
         public double Speed { get; set; }
         public UnitStrategy UnitStrategy { get; private set; }
         public string Name { get; set; }

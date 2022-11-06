@@ -1,5 +1,6 @@
 ﻿using TowerDefense.Server.Models;
 using TowerDefense.Server.Models.Levels;
+using TowerDefense.Server.Models.Levels.Map;
 using TowerDefense.Server.Observers;
 
 namespace TowerDefense.Server
@@ -8,8 +9,7 @@ namespace TowerDefense.Server
     {
         private static GameSession _instance = new GameSession();
         private List<Player> _players;
-        public Subject Subject { get; set; } = new();
-
+        public Map Map { get; set; }
         private List<string> _levels = new()
         {
             "water", "lava", "desert"

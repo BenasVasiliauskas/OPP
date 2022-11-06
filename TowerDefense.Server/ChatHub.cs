@@ -29,6 +29,7 @@ namespace TowerDefense.Server
                     var creator = new LevelCreator();
                     AbstractFactory abstractFactory = creator.FactoryMethod(_gameSession.CurrentGameLevel).GetAbstractFactory();
                     Map map = abstractFactory.CreateMap();
+                    _gameSession.Map = map;
 
                     await Clients.Clients(_gameSession.GetSessionIds()).SendAsync("GameStarted", map);
                 }
@@ -58,7 +59,10 @@ namespace TowerDefense.Server
             Unit enemy = unitFactory.CreateEnemy(enemyType);
             enemy.Level = null;
 
-            _gameSession.Subject.Attach(enemy);
+            var player = _gameSession.GetSessionPlayers().Where(p => p.ConnectionId == Context.ConnectionId).SingleOrDefault();
+            player.Subject.Attach(enemy);
+
+            player.Enemies.Add(enemy);
 
             await Clients.Others.SendAsync("EnemyCreated", enemy);
         }
@@ -70,14 +74,52 @@ namespace TowerDefense.Server
             await Clients.All.SendAsync("LevelChanged", _gameSession.CurrentGameLevel);
         }
 
-        public async Task GameTimerTick()
-        {
-            await Clients.All.SendAsync("Ticked", _gameSession.GetSessionPlayers()[0]);
-        }
-
         public async Task PowerUp()
         {
-            _gameSession.Subject.IncreasePower();
+            var player = _gameSession.GetSessionPlayers().Where(p => p.ConnectionId == Context.ConnectionId).SingleOrDefault();
+
+            player.Subject.IncreasePower();
+            await Clients.Others.SendAsync("PoweredUp");
+        }
+
+        public async Task GameTimerTick()
+        {
+            var player = _gameSession.GetSessionPlayers().Where(p => p.ConnectionId == Context.ConnectionId).SingleOrDefault();
+            var map = _gameSession.Map;
+
+            foreach (var enemy in player.Enemies)
+            {
+                //double moveX = 0;
+                //double moveY = 0;
+                //var direction = "";
+
+                //var currentInterval = map.Move.Where(map => enemy.X >= map.FromX && enemy.X <= map.ToX && enemy.Y >= map.FromY && enemy.Y <= map.ToY).SingleOrDefault();
+
+                //direction = currentInterval.Direction;
+
+                //switch (direction)
+                //{
+                //    case "right":
+                //        moveX = enemy.Speed;
+                //        break;
+                //    case "down":
+                //        moveY = enemy.Speed;
+                //        break;
+                //    default:
+                //        break;
+                //}
+
+                //enemy.X += moveX;
+                //enemy.Y += moveY;
+
+            }
+            await Clients.Others.SendAsync("Ticked", player);
+        }
+
+        public void EnemyDied(int index)
+        {
+            var player = _gameSession.GetSessionPlayers().Where(p => p.ConnectionId != Context.ConnectionId).SingleOrDefault();
+            player.Enemies.RemoveAt(index);
         }
     }
 }

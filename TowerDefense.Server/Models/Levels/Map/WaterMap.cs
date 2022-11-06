@@ -46,6 +46,12 @@
             };
 
             PathImageSource = "/Images/Paths/grass.jpg";
+
+            Move = new()
+            {
+                new() {FromX = 0, FromY = 96, ToX = 288, ToY = 96, Direction = "right" },
+                new() {FromX = 288, FromY = 96, ToX = 288, ToY = 288, Direction = "down" },
+            };
         }
     }
 }
