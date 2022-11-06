@@ -1,5 +1,5 @@
 ﻿using TowerDefense.Server.Models.Enemies;
-using TowerDefense.Server.Models.Levels.Map;
+using TowerDefense.Server.Models.Maps;
 using TowerDefense.Server.Models.Towers;
 
 namespace TowerDefense.Server.Models
@@ -10,11 +10,11 @@ namespace TowerDefense.Server.Models
         {
             if (type == "S")
             {
-                return new ShootingEnemy(new DesertLevel());
+                return new ShootingEnemy(new DesertMap());
             }
             else if (type == "H")
             {
-                return new HealingEnemy(new DesertLevel());
+                return new HealingEnemy(new DesertMap());
             }
             else
             {
@@ -26,21 +26,16 @@ namespace TowerDefense.Server.Models
         {
             if (type == "S")
             {
-                return new SingleShotTower(new DesertLevel());
+                return new SingleShotTower();
             }
             else if (type == "A")
             {
-                return new AoeTower(new DesertLevel());
+                return new AoeTower();
             }
             else
             {
                 return null;
             }
-        }
-
-        public override Map CreateMap()
-        {
-            throw new NotImplementedException();
         }
     }
 }

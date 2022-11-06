@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using TowerDefense.Server.Models;
 using TowerDefense.Server.Models.Levels;
-using TowerDefense.Server.Models.Levels.Map;
 
 namespace TowerDefense.Server
 {
@@ -27,11 +26,10 @@ namespace TowerDefense.Server
                 if (_gameSession.IsGameStarted)
                 {
                     var creator = new LevelCreator();
-                    AbstractFactory abstractFactory = creator.FactoryMethod(_gameSession.CurrentGameLevel).GetAbstractFactory();
-                    Map map = abstractFactory.CreateMap();
-                    _gameSession.Map = map;
+                    ILevel level = creator.FactoryMethod(_gameSession.CurrentGameLevel);
+                    var path = level.GetMapMoveset();
 
-                    await Clients.Clients(_gameSession.GetSessionIds()).SendAsync("GameStarted", map);
+                    await Clients.Clients(_gameSession.GetSessionIds()).SendAsync("GameStarted", path);
                 }
             }
             else
@@ -46,7 +44,6 @@ namespace TowerDefense.Server
             AbstractFactory unitFactory = creator.FactoryMethod(_gameSession.CurrentGameLevel).GetAbstractFactory();
 
             Unit tower = unitFactory.CreateTower(towerType);
-            tower.Level = null;
 
             await Clients.Caller.SendAsync("TowerBuilt", tower, x, y);
         }
@@ -57,7 +54,6 @@ namespace TowerDefense.Server
             AbstractFactory unitFactory = creator.FactoryMethod(_gameSession.CurrentGameLevel).GetAbstractFactory();
 
             Unit enemy = unitFactory.CreateEnemy(enemyType);
-            enemy.Level = null;
 
             var player = _gameSession.GetSessionPlayers().Where(p => p.ConnectionId == Context.ConnectionId).SingleOrDefault();
             player.Subject.Attach(enemy);
@@ -85,7 +81,6 @@ namespace TowerDefense.Server
         public async Task GameTimerTick()
         {
             var player = _gameSession.GetSessionPlayers().Where(p => p.ConnectionId == Context.ConnectionId).SingleOrDefault();
-            var map = _gameSession.Map;
 
             foreach (var enemy in player.Enemies)
             {

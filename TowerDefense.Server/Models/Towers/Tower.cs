@@ -1,14 +1,11 @@
-﻿using TowerDefense.Server.Models.Levels;
-
-namespace TowerDefense.Server.Models.Towers
+﻿namespace TowerDefense.Server.Models.Towers
 {
     public abstract class Tower : Unit
     {
         public double Damage { get; set; }
 
-        protected Tower(ILevel level) : base(level)
+        protected Tower()
         {
-            level.SetStats(this);
         }
 
         public override void Update()

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Controls;
-using TowerDefense.Server.Models.Levels.Map;
+using TowerDefense.Server.Models.Maps;
 
 namespace TowerDefense.Client
 {
@@ -24,11 +24,11 @@ namespace TowerDefense.Client
                 });
             });
 
-            connection.On<Map>("GameStarted", async (map) =>
+            connection.On<List<MovePoint>>("GameStarted", async (path) =>
             {
                 game.Text = "GAME WILL START SOON";
                 await Wait();
-                this.Content = new UserControl2(connection, map);
+                this.Content = new UserControl2(connection, path);
             });
         }
 

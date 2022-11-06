@@ -1,14 +1,19 @@
-﻿using TowerDefense.Server.Models.Levels;
+﻿using TowerDefense.Server.Models.Maps;
 
 namespace TowerDefense.Server.Models.Enemies
 {
     public class Enemy : Unit
     {
-        
-        public Enemy(ILevel level) : base(level)
+        private readonly IMapMoveset _mapMoveset;
+
+        public Enemy(IMapMoveset mapMoveset)
         {
-            level.SetStats(this);
-            Y = 96;
+            _mapMoveset = mapMoveset;
+        }
+
+        public List<MovePoint> GetMovePoints()
+        {
+            return _mapMoveset.GetMovePoints();
         }
 
         public override void Update()

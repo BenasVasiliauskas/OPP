@@ -10,7 +10,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using TowerDefense.Server.Models;
-using TowerDefense.Server.Models.Levels.Map;
+using TowerDefense.Server.Models.Maps;
 
 namespace TowerDefense.Client
 {
@@ -25,38 +25,20 @@ namespace TowerDefense.Client
     /// </summary>
     public partial class UserControl2 : UserControl
     {
+        private readonly List<MovePoint> _path;
         private HubConnection _connection;
         private bool _towerBuildSelected = false;
-        private Map _map;
         private List<Rectangle> _rectangles = new();
         private List<(DoubleAnimationUsingPath, DoubleAnimationUsingPath)> _animations = new();
         private List<Storyboard> storyboards = new();
         
         DispatcherTimer gameTimer = new();
 
-        public UserControl2(HubConnection connection, Map map)
+        public UserControl2(HubConnection connection, List<MovePoint> path)
         {
             InitializeComponent();
             _connection = connection;
-            _map = map;
-
-            //_map.Path.ForEach(path =>
-            //{
-            //    var pathRect = new Rectangle
-            //    {
-            //        Width = 32,
-            //        Height = 32,
-            //        Fill = new ImageBrush
-            //        {
-            //            ImageSource = new BitmapImage(new Uri($"pack://application:,,,{_map.PathImageSource}"))
-            //        }
-            //    };
-
-            //    Canvas.SetLeft(pathRect, path.Y);
-            //    Canvas.SetTop(pathRect, path.X);
-
-            //    canvas.Children.Add(pathRect);
-            //});
+            _path = path;
 
             gameTimer.Tick += delegate (object sender, EventArgs e)
             {
@@ -110,15 +92,14 @@ namespace TowerDefense.Client
 
                 Path path = new Path();
                 PathFigure pathFigure = new PathFigure();
-                pathFigure.StartPoint = new Point(0, 96);
+                pathFigure.StartPoint = new Point(_path[0].X, _path[0].Y);
 
-                LineSegment segment1 = new LineSegment();
-                segment1.Point = new Point(288, 96);
-                pathFigure.Segments.Add(segment1);
-
-                LineSegment segment2 = new LineSegment();
-                segment2.Point = new Point(288, 288);
-                pathFigure.Segments.Add(segment2);
+                for (int i = 1; i < _path.Count; i++)
+                {
+                    LineSegment segment = new LineSegment();
+                    segment.Point = new Point(_path[i].X, _path[i].Y);
+                    pathFigure.Segments.Add(segment);
+                }
 
                 PathGeometry pathGeometry = new PathGeometry();
                 pathGeometry.Figures.Add(pathFigure);
@@ -139,7 +120,6 @@ namespace TowerDefense.Client
 
                 Storyboard storyboard = new Storyboard();
 
-
                 Storyboard.SetTarget(animX, rect);
                 Storyboard.SetTargetProperty(animX, new PropertyPath(Canvas.LeftProperty));
                 Storyboard.SetTarget(animY, rect);
@@ -150,9 +130,6 @@ namespace TowerDefense.Client
                 storyboards.Add(storyboard);
 
                 storyboard.Begin();
-                //rect.BeginAnimation(Canvas.LeftProperty, animX);
-                //rect.BeginAnimation(Canvas.TopProperty, animY);
-
             });
 
             _connection.On<Unit, int, int>("TowerBuilt", (unit, x, y) =>
@@ -163,7 +140,6 @@ namespace TowerDefense.Client
                 {
                     Width = 32,
                     Height = 32,
-                    Fill = (Brush)bc.ConvertFrom(unit.Color)
                 };
 
                 Canvas.SetLeft(tower, x);
@@ -175,7 +151,10 @@ namespace TowerDefense.Client
 
             _connection.On("PoweredUp", () =>
             {
-                storyboards[0].SetSpeedRatio(2);
+                foreach (var item in storyboards)
+                {
+                    item.SetSpeedRatio(item.SpeedRatio += 0.1);
+                }
 
                 //_animations[0].Item1.SpeedRatio += 1;
                 //_animations[0].Item2.SpeedRatio += 1;

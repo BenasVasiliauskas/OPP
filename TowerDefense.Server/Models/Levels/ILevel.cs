@@ -1,8 +1,10 @@
-﻿namespace TowerDefense.Server.Models.Levels
+﻿using TowerDefense.Server.Models.Maps;
+
+namespace TowerDefense.Server.Models.Levels
 {
     public interface ILevel
     {
         public AbstractFactory GetAbstractFactory();
-        public void SetStats(Unit unit);
+        public List<MovePoint> GetMapMoveset();
     }
 }

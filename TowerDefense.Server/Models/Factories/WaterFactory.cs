@@ -1,6 +1,5 @@
 ﻿using TowerDefense.Server.Models.Enemies;
-using TowerDefense.Server.Models.Levels;
-using TowerDefense.Server.Models.Levels.Map;
+using TowerDefense.Server.Models.Maps;
 using TowerDefense.Server.Models.Towers;
 
 namespace TowerDefense.Server.Models
@@ -11,11 +10,11 @@ namespace TowerDefense.Server.Models
         {
             if (type == "S")
             {
-                return new ShootingEnemy(new WaterLevel());
+                return new ShootingEnemy(new WaterMap());
             }
             else if (type == "H")
             {
-                return new HealingEnemy(new WaterLevel());
+                return new HealingEnemy(new WaterMap());
             }
             else
             {
@@ -27,21 +26,16 @@ namespace TowerDefense.Server.Models
         {
             if (type == "S")
             {
-                return new SingleShotTower(new WaterLevel());
+                return new SingleShotTower();
             }
             else if (type == "A")
             {
-                return new AoeTower(new WaterLevel());
+                return new AoeTower();
             }
             else
             {
                 return null;
             }
-        }
-
-        public override Map CreateMap()
-        {
-            return new WaterMap();
         }
     }
 }

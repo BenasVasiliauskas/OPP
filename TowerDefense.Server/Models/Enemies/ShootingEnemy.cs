@@ -1,10 +1,10 @@
-﻿using TowerDefense.Server.Models.Levels;
+﻿using TowerDefense.Server.Models.Maps;
 
 namespace TowerDefense.Server.Models.Enemies
 {
     public class ShootingEnemy : Enemy
     {
-        public ShootingEnemy(ILevel level) : base(level)
+        public ShootingEnemy(IMapMoveset mapMoveset) : base(mapMoveset)
         {
             ImageSource = "/Images/Enemies/man-with-gun.png";
             Health = 100;
