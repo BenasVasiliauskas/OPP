@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TowerDefense.Server.Models
+namespace TowerDefense.Server.Models.Maps
 {
-    public abstract class Creator
+    public interface IMapMoveset
     {
-        public abstract Level FactoryMethod(string level);
+        public List<MovePoint> GetMovePoints();
     }
 }

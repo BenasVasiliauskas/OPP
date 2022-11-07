@@ -6,15 +6,55 @@
              xmlns:local="clr-namespace:TowerDefense.Client"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" Loaded="ActionLoaded">
-    <Canvas x:Name="canvas" MouseDown="Canvas_MouseDown" Background="Transparent">
-        <Button x:Name="STOWER" Content="SINGLE SHOT TOWER" Canvas.Left="83" Canvas.Top="350" Click="Button_Click"/>
-        <Button Content="AOE TOWER" Canvas.Left="83" Canvas.Top="370" Click="Button_Click_1" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <TextBox x:Name="TowerName" Canvas.Left="628" TextWrapping="Wrap" Text="TextBox" Canvas.Top="72" Width="120"/>
-        <Rectangle Width="320" Height="32" Panel.ZIndex="1" Fill="Black" Canvas.Top="96" Tag="path"/>
-        <Rectangle Width="32" Height="96" Panel.ZIndex="1" Fill="Black" Canvas.Top="128" Canvas.Left="288" HorizontalAlignment="Center" VerticalAlignment="Center" Tag="path"/>
-        <Rectangle Width="320" Height="32" Panel.ZIndex="1" Fill="Black" Canvas.Top="224" Tag="path" Canvas.Left="288"/>
-        <Rectangle Width="32" Height="96" Panel.ZIndex="1" Fill="Black" Canvas.Top="256" Canvas.Left="576" Tag="path" HorizontalAlignment="Center" VerticalAlignment="Top"/>
-        <Rectangle Width="320" Height="32" Panel.ZIndex="1" Fill="Black" Canvas.Top="352" Tag="path" Canvas.Left="288" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-        <Rectangle Width="32" Height="96" Panel.ZIndex="1" Fill="Black" Canvas.Top="384" Canvas.Left="288" Tag="path" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-    </Canvas>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="auto"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Border BorderThickness="0, 0, 5, 0" Grid.Column="0" BorderBrush="Black">
+            <Canvas x:Name="canvas" Background="Transparent" MouseLeftButtonDown="Canvas_Click"></Canvas>
+        </Border>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Border BorderThickness="1" BorderBrush="Black">
+                <Grid Grid.Row="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"></ColumnDefinition>
+                        <ColumnDefinition Width="auto"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Border BorderThickness="1" BorderBrush="Black" Grid.Row="0">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Label Grid.Row="0" Grid.Column="0" Content="Enemies" HorizontalAlignment="Center"></Label>
+                        </Grid>
+                    </Border>
+
+                    <Button Margin="20" Grid.Row="1" Grid.Column="0" Click="Create_Shooting_Enemy_Button_Click" Background="Transparent" BorderThickness="0">
+                        <Image Source="Images/Enemies/man-with-gun.png" />
+                    </Button>
+                    <Button Margin="20" Grid.Row="1" Grid.Column="1" Click="Create_Healing_Enemy_Button_Click" Background="Transparent" BorderThickness="0">
+                        <Image Source="Images/Enemies/priest.png" />
+                    </Button>
+                </Grid>
+            </Border>
+            <Button Content="Power up" HorizontalAlignment="Left" Margin="65,59,0,0" Grid.Row="2" VerticalAlignment="Top" Click="PowerUp_Click"/>
+
+            <!--<Button x:Name="STOWER" Content="ENEMY" Canvas.Left="83" Canvas.Top="350" Click="Button_Click"/>
+            <Button x:Name="TowerButton" Content="TOWER" Canvas.Left="164" Canvas.Top="350" Click="TowerButton_Click" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <Button x:Name="PowerUp" Content="POWERUP" Canvas.Left="251" Canvas.Top="350" Click="PowerUp_Click"/>-->
+        </Grid>
+    </Grid>
 </UserControl>

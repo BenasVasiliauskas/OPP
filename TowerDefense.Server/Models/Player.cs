@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using TowerDefense.Server.Models.Enemies;
+using TowerDefense.Server.Observers;
 
 namespace TowerDefense.Server.Models
 {
@@ -10,5 +7,8 @@ namespace TowerDefense.Server.Models
     {
         public string Username { get; set; }
         public string ConnectionId { get; set; }
+        public List<Unit> Enemies { get; set; } = new();
+        public Subject Subject { get; set; } = new();
+
     }
 }

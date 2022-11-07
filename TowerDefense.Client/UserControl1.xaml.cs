@@ -1,20 +1,8 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Threading;
-using TowerDefense.Server.Models;
+using TowerDefense.Server.Models.Maps;
 
 namespace TowerDefense.Client
 {
@@ -36,11 +24,11 @@ namespace TowerDefense.Client
                 });
             });
 
-            connection.On("GameStarted", async () =>
+            connection.On<List<MovePoint>>("GameStarted", async (path) =>
             {
                 game.Text = "GAME WILL START SOON";
                 await Wait();
-                this.Content = new UserControl2(connection);
+                this.Content = new UserControl2(connection, path);
             });
         }
 

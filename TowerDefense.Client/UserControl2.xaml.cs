@@ -1,112 +1,77 @@
 ﻿using Microsoft.AspNetCore.SignalR.Client;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using TowerDefense.Server.Models;
+using TowerDefense.Server.Models.Maps;
 
 namespace TowerDefense.Client
 {
-    public class RectangleWithIndex
+    public class RectangleEnemy
     {
         public Rectangle Rectangle { get; set; }
-        public int Index { get; set; }
+        public Unit Enemy { get; set; }
     }
-
-
 
     /// <summary>
     /// Interaction logic for UserControl2.xaml
     /// </summary>
     public partial class UserControl2 : UserControl
     {
-        HubConnection _connection;
-
-        private readonly List<(double, double)> path = new List<(double, double)>()
-            {
-                (96, 32),
-                (96, 64),
-                (96, 96),
-                (96, 128),
-                (96, 160),
-                (96, 192),
-                (96, 224),
-                (96, 256),
-                (96, 288),
-                (128, 288),
-                (160, 288),
-                (192, 288),
-                (224, 288),
-                (224, 320),
-                (224, 352),
-                (224, 384),
-                (224, 416),
-                (224, 448),
-                (224, 480),
-                (224, 512),
-                (224, 544),
-                (224, 576),
-                (256, 576),
-                (288, 576),
-                (320, 576),
-                (352, 576),
-                (352, 544),
-                (352, 512),
-                (352, 480),
-                (352, 448),
-                (352, 416),
-                (352, 384),
-                (352, 352),
-                (352, 320),
-                (352, 288),
-            };
-
+        private readonly List<MovePoint> _path;
+        private HubConnection _connection;
+        private bool _towerBuildSelected = false;
+        private List<Rectangle> _rectangles = new();
+        private List<(DoubleAnimationUsingPath, DoubleAnimationUsingPath)> _animations = new();
+        private List<Storyboard> storyboards = new();
+        
         DispatcherTimer gameTimer = new();
 
-        public UserControl2(HubConnection connection)
+        public UserControl2(HubConnection connection, List<MovePoint> path)
         {
             InitializeComponent();
             _connection = connection;
-        }
+            _path = path;
 
-        private void GameTimerEvent(object sender, EventArgs e, RectangleWithIndex enemy)
-        {
-            Canvas.SetTop(enemy.Rectangle, path[enemy.Index].Item1);
-            Canvas.SetLeft(enemy.Rectangle, path[enemy.Index].Item2);
-
-            if(enemy.Index < path.Count - 1)
+            gameTimer.Tick += delegate (object sender, EventArgs e)
             {
-                enemy.Index++;
-            }
+                GameTimerEvent(sender, e);
+            };
+
+            gameTimer.Interval = TimeSpan.FromMilliseconds(10);
+            gameTimer.Start();
         }
 
-        private async void Canvas_MouseDown(object sender, MouseButtonEventArgs e)
+        private async void GameTimerEvent(object sender, EventArgs e)
         {
-            var startPoint = e.GetPosition(canvas);
-
-            await _connection.InvokeAsync("Draw", startPoint.X, startPoint.Y);
+            await _connection.InvokeAsync("GameTimerTick");
         }
 
         private void ActionLoaded(object sender, RoutedEventArgs e)
         {
-            _connection.On<double, double, Unit>("TowerBuilt", (x, y, unit) =>
+            _connection.On<Player>("Ticked", async (player) =>
             {
-                var rect = new Rectangle
+                for (int i = 0; i < player.Enemies.Count; i++)
                 {
-                    Width = 20,
-                    Height = 20,
-                    Fill = unit.Color == "Red" ? Brushes.Red : unit.Color == "Blue" ? Brushes.Blue : Brushes.Yellow,
-                };
-
-                Canvas.SetLeft(rect, x);
-                Canvas.SetTop(rect, y);
-                TowerName.Text = unit.Name;
-                canvas.Children.Add(rect);
+                    if (player.Enemies[i].X + 32 >= canvas.ActualWidth)
+                    {
+                        canvas.Children.Remove(_rectangles[i]);
+                        _rectangles.RemoveAt(i);
+                        await _connection.InvokeAsync("EnemyDied", i);
+                    }
+                    //else
+                    //{
+                    //    Canvas.SetLeft(_rectangles[i], player.Enemies[i].X);
+                    //    Canvas.SetTop(_rectangles[i], player.Enemies[i].Y);
+                    //}
+                }
             });
 
             _connection.On<Unit>("EnemyCreated", (unit) =>
@@ -115,35 +80,126 @@ namespace TowerDefense.Client
                 {
                     Width = 32,
                     Height = 32,
-                    Fill = new SolidColorBrush(Color.FromRgb(122, 122, 122))
+                    Fill = new ImageBrush
+                    {
+                        ImageSource = new BitmapImage(new Uri($"pack://application:,,,{unit.ImageSource}"))
+                    }
                 };
-
                 Canvas.SetTop(rect, 96);
-                Canvas.SetZIndex(rect, 2);
-
+                Canvas.SetLeft(rect, 0);
+                _rectangles.Add(rect);
                 canvas.Children.Add(rect);
 
-                var rectangleWithIndex = new RectangleWithIndex { Rectangle = rect };
+                Path path = new Path();
+                PathFigure pathFigure = new PathFigure();
+                pathFigure.StartPoint = new Point(_path[0].X, _path[0].Y);
 
-                gameTimer.Tick += delegate (object sender, EventArgs e)
+                for (int i = 1; i < _path.Count; i++)
                 {
-                    GameTimerEvent(sender, e, rectangleWithIndex);
+                    LineSegment segment = new LineSegment();
+                    segment.Point = new Point(_path[i].X, _path[i].Y);
+                    pathFigure.Segments.Add(segment);
+                }
+
+                PathGeometry pathGeometry = new PathGeometry();
+                pathGeometry.Figures.Add(pathFigure);
+
+                path.Data = pathGeometry;
+
+                var animX = new DoubleAnimationUsingPath();
+                animX.Duration = TimeSpan.FromSeconds(10);
+                animX.PathGeometry = pathGeometry;
+                animX.Source = PathAnimationSource.X;
+
+                var animY = new DoubleAnimationUsingPath();
+                animY.Duration = TimeSpan.FromSeconds(10);
+                animY.PathGeometry = pathGeometry;
+                animY.Source = PathAnimationSource.Y;
+
+                _animations.Add((animX, animY));
+
+                Storyboard storyboard = new Storyboard();
+
+                Storyboard.SetTarget(animX, rect);
+                Storyboard.SetTargetProperty(animX, new PropertyPath(Canvas.LeftProperty));
+                Storyboard.SetTarget(animY, rect);
+                Storyboard.SetTargetProperty(animY, new PropertyPath(Canvas.TopProperty));
+
+                storyboard.Children.Add(animX);
+                storyboard.Children.Add(animY);
+                storyboards.Add(storyboard);
+
+                storyboard.Begin();
+            });
+
+            _connection.On<Unit, int, int>("TowerBuilt", (unit, x, y) =>
+            {
+                BrushConverter bc = new();
+
+                var tower = new Rectangle
+                {
+                    Width = 32,
+                    Height = 32,
                 };
 
-                gameTimer.Interval = TimeSpan.FromMilliseconds(unit.Speed);
-                gameTimer.Start();
+                Canvas.SetLeft(tower, x);
+                Canvas.SetTop(tower, y);
+
+                canvas.Children.Add(tower);
+            });
+
+
+            _connection.On("PoweredUp", () =>
+            {
+                foreach (var item in storyboards)
+                {
+                    item.SetSpeedRatio(item.SpeedRatio += 0.1);
+                }
+
+                //_animations[0].Item1.SpeedRatio += 1;
+                //_animations[0].Item2.SpeedRatio += 1;
+                ////_rectangles[0].BeginAnimation(, _animations[0].Item1);
+                //_rectangles[0].BeginAnimation(Canvas.TopProperty, _animations[0].Item2);
+
             });
         }
-
-        private async void Button_Click(object sender, RoutedEventArgs e)
+        private async void Create_Shooting_Enemy_Button_Click(object sender, RoutedEventArgs e)
         {
-            Random random = new Random();
-            await _connection.InvokeAsync("BuildTower", random.Next(0, 300), random.Next(0, 300), "S");
+            await _connection.InvokeAsync("CreateEnemy", "S");
+        }
+        private async void Create_Healing_Enemy_Button_Click(object sender, RoutedEventArgs e)
+        {
+            await _connection.InvokeAsync("CreateEnemy", "H");
         }
 
-        private async void Button_Click_1(object sender, RoutedEventArgs e)
+        private async void Button1_Click(object sender, RoutedEventArgs e)
         {
-            await _connection.InvokeAsync("CreateEnemy", "lava");
+            await _connection.InvokeAsync("ChangeLevel");
+        }
+
+        private void TowerButton_Click(object sender, RoutedEventArgs e)
+        {
+            _towerBuildSelected = true;
+        }
+
+        private async void Canvas_Click(object sender, MouseButtonEventArgs e)
+        {
+            if (_towerBuildSelected)
+            {
+                var point = e.GetPosition(canvas);
+
+                int newX = ((int)point.X / 32) * 32;
+                int newY = ((int)point.Y / 32) * 32;
+                _towerBuildSelected = false;
+
+                await _connection.InvokeAsync("CreateTower", "S", newX, newY);
+            }
+        }
+
+        private async void PowerUp_Click(object sender, RoutedEventArgs e)
+        {
+
+            await _connection.InvokeAsync("PowerUp");
         }
     }
 }
