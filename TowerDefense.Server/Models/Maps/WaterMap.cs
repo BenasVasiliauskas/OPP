@@ -11,7 +11,7 @@
                 new MovePoint { X = 200, Y = 250 },
                 new MovePoint { X = 50, Y = 250 },
                 new MovePoint { X = 50, Y = 300 },
-                new MovePoint { X = 400, Y = 300 }
+                new MovePoint { X = 300, Y = 300 }
             };
         }
     }

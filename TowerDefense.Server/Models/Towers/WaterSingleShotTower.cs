@@ -1,8 +1,8 @@
 ﻿namespace TowerDefense.Server.Models.Towers
 {
-    public class SingleShotTower : Tower
+    public class WaterSingleShotTower : Tower
     {
-        public SingleShotTower()
+        public WaterSingleShotTower()
         {
             Damage = 5;
         }

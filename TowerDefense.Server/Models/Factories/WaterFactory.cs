@@ -10,11 +10,11 @@ namespace TowerDefense.Server.Models
         {
             if (type == "S")
             {
-                return new ShootingEnemy(new WaterMap());
+                return new WaterShootingEnemy(new WaterMap());
             }
             else if (type == "H")
             {
-                return new HealingEnemy(new WaterMap());
+                return new WaterHealingEnemy(new WaterMap());
             }
             else
             {
@@ -26,11 +26,11 @@ namespace TowerDefense.Server.Models
         {
             if (type == "S")
             {
-                return new SingleShotTower();
+                return new WaterSingleShotTower();
             }
             else if (type == "A")
             {
-                return new AoeTower();
+                return new WaterAoeTower();
             }
             else
             {

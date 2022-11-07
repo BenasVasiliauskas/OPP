@@ -10,11 +10,11 @@ namespace TowerDefense.Server.Models
         {
             if (type == "S")
             {
-                return new ShootingEnemy(new DesertMap());
+                return new DesertShootingEnemy(new DesertMap());
             }
             else if (type == "H")
             {
-                return new HealingEnemy(new DesertMap());
+                return new DesertHealingEnemy(new DesertMap());
             }
             else
             {
@@ -26,11 +26,11 @@ namespace TowerDefense.Server.Models
         {
             if (type == "S")
             {
-                return new SingleShotTower();
+                return new DesertSingleShotTower();
             }
             else if (type == "A")
             {
-                return new AoeTower();
+                return new DesertAoeTower();
             }
             else
             {

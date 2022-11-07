@@ -7,54 +7,42 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" Loaded="ActionLoaded">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"></ColumnDefinition>
-            <ColumnDefinition Width="auto"></ColumnDefinition>
-        </Grid.ColumnDefinitions>
-        <Border BorderThickness="0, 0, 5, 0" Grid.Column="0" BorderBrush="Black">
-            <Canvas x:Name="canvas" Background="Transparent" MouseLeftButtonDown="Canvas_Click"></Canvas>
-        </Border>
-        <Grid Grid.Column="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto"></RowDefinition>
-                <RowDefinition Height="auto"></RowDefinition>
-                <RowDefinition Height="auto"></RowDefinition>
-            </Grid.RowDefinitions>
-            <Border BorderThickness="1" BorderBrush="Black">
-                <Grid Grid.Row="0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto"></ColumnDefinition>
-                        <ColumnDefinition Width="auto"></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <Border BorderThickness="1" BorderBrush="Black" Grid.Row="0">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"></RowDefinition>
-                            </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <UserControl Grid.Column="0" >
+                <Grid Background="Aqua">
+                    <Canvas x:Name="canvas" Background="Transparent" MouseLeftButtonDown="Canvas_Click">
+                        <Grid VerticalAlignment="Bottom">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="auto"></ColumnDefinition>
+                                <ColumnDefinition Width="auto"></ColumnDefinition>
+                                <ColumnDefinition Width="auto"></ColumnDefinition>
+                                <ColumnDefinition Width="auto"></ColumnDefinition>
                             </Grid.ColumnDefinitions>
-                            <Label Grid.Row="0" Grid.Column="0" Content="Enemies" HorizontalAlignment="Center"></Label>
+                            <Button Margin="20" Grid.Column="0" VerticalAlignment="Bottom" Click="Create_Shooting_Enemy_Button_Click" Background="Transparent" BorderThickness="0">
+                                <Image Source="Images/Enemies/man-with-gun.png" />
+                            </Button>
+                            <Button Margin="20" Grid.Column="1" VerticalAlignment="Bottom" Click="Create_Healing_Enemy_Button_Click" Background="Transparent" BorderThickness="0">
+                                <Image Source="Images/Enemies/priest.png" />
+                            </Button>
+                            <Button Grid.Column="2" Content="Power up" Click="PowerUp_Click"></Button>
+                            <Button Grid.Column="3" Content="Tower" Click="TowerButton_Click"></Button>
                         </Grid>
-                    </Border>
-
-                    <Button Margin="20" Grid.Row="1" Grid.Column="0" Click="Create_Shooting_Enemy_Button_Click" Background="Transparent" BorderThickness="0">
-                        <Image Source="Images/Enemies/man-with-gun.png" />
-                    </Button>
-                    <Button Margin="20" Grid.Row="1" Grid.Column="1" Click="Create_Healing_Enemy_Button_Click" Background="Transparent" BorderThickness="0">
-                        <Image Source="Images/Enemies/priest.png" />
-                    </Button>
+                        <Label Canvas.Left="316" Canvas.Top="48">
+                            <Label x:Name="coordinate" Content="Label" RenderTransformOrigin="0.411,0.378"/>
+                        </Label>
+                        <Label x:Name="distance" Content="Label" Canvas.Left="321" Canvas.Top="22"/>
+                    </Canvas>
                 </Grid>
-            </Border>
-            <Button Content="Power up" HorizontalAlignment="Left" Margin="65,59,0,0" Grid.Row="2" VerticalAlignment="Top" Click="PowerUp_Click"/>
-
-            <!--<Button x:Name="STOWER" Content="ENEMY" Canvas.Left="83" Canvas.Top="350" Click="Button_Click"/>
-            <Button x:Name="TowerButton" Content="TOWER" Canvas.Left="164" Canvas.Top="350" Click="TowerButton_Click" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-            <Button x:Name="PowerUp" Content="POWERUP" Canvas.Left="251" Canvas.Top="350" Click="PowerUp_Click"/>-->
+            </UserControl>
+            <UserControl Grid.Column="1">
+                <Grid Background="Red">
+                    <Canvas x:Name="enemyCanvas" Background="Transparent" MouseLeftButtonDown="Canvas_Click"></Canvas>
+                </Grid>
+            </UserControl>
         </Grid>
     </Grid>
 </UserControl>

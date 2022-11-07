@@ -29,6 +29,7 @@ namespace TowerDefense.Client
         private HubConnection _connection;
         private bool _towerBuildSelected = false;
         private List<Rectangle> _rectangles = new();
+        private List<Rectangle> _towers = new();
         private List<(DoubleAnimationUsingPath, DoubleAnimationUsingPath)> _animations = new();
         private List<Storyboard> storyboards = new();
         
@@ -45,7 +46,7 @@ namespace TowerDefense.Client
                 GameTimerEvent(sender, e);
             };
 
-            gameTimer.Interval = TimeSpan.FromMilliseconds(10);
+            gameTimer.Interval = TimeSpan.FromMilliseconds(100);
             gameTimer.Start();
         }
 
@@ -56,26 +57,39 @@ namespace TowerDefense.Client
 
         private void ActionLoaded(object sender, RoutedEventArgs e)
         {
-            _connection.On<Player>("Ticked", async (player) =>
+            _connection.On<List<Unit>>("Ticked", async (enemies) =>
             {
-                for (int i = 0; i < player.Enemies.Count; i++)
+                for (int i = 0; i < _rectangles.Count; i++)
                 {
-                    if (player.Enemies[i].X + 32 >= canvas.ActualWidth)
+                    double x = Canvas.GetLeft(_rectangles[i]);
+                    double y = Canvas.GetTop(_rectangles[i]);
+
+                    for(int j = 0; j < _towers.Count; j++)
                     {
-                        canvas.Children.Remove(_rectangles[i]);
-                        _rectangles.RemoveAt(i);
-                        await _connection.InvokeAsync("EnemyDied", i);
+                        double towerX = Canvas.GetLeft(_towers[j]);
+                        double towerY = Canvas.GetTop(_towers[j]);
+
+                        var actualDistance = Math.Abs(x - towerX) + Math.Abs(y - towerY);
+                        distance.Content = actualDistance.ToString();
+
+                        if (actualDistance < 64)
+                        {
+                            await _connection.InvokeAsync("NearTower", i, j, _connection.ConnectionId);
+                            coordinate.Content = enemies[0].Health.ToString();
+                        }
                     }
-                    //else
-                    //{
-                    //    Canvas.SetLeft(_rectangles[i], player.Enemies[i].X);
-                    //    Canvas.SetTop(_rectangles[i], player.Enemies[i].Y);
-                    //}
                 }
+
             });
 
-            _connection.On<Unit>("EnemyCreated", (unit) =>
+            _connection.On<int>("EnemyDeath", (index) =>
             {
+                canvas.Children.Remove(_rectangles[index]);
+                enemyCanvas.Children.Remove(_rectangles[index]);
+            });
+
+            _connection.On<Unit, Player, string>("EnemyCreated", (unit, player, contextId) =>
+            {               
                 var rect = new Rectangle
                 {
                     Width = 32,
@@ -88,7 +102,16 @@ namespace TowerDefense.Client
                 Canvas.SetTop(rect, 96);
                 Canvas.SetLeft(rect, 0);
                 _rectangles.Add(rect);
-                canvas.Children.Add(rect);
+
+                if (player.ConnectionId == contextId) 
+                {
+                    enemyCanvas.Children.Add(rect);
+                }
+                else
+                {
+                    canvas.Children.Add(rect);
+                }
+
 
                 Path path = new Path();
                 PathFigure pathFigure = new PathFigure();
@@ -132,7 +155,7 @@ namespace TowerDefense.Client
                 storyboard.Begin();
             });
 
-            _connection.On<Unit, int, int>("TowerBuilt", (unit, x, y) =>
+            _connection.On<Unit, Player, string, int, int>("TowerBuilt", (unit, player, contextId, x, y) =>
             {
                 BrushConverter bc = new();
 
@@ -140,12 +163,22 @@ namespace TowerDefense.Client
                 {
                     Width = 32,
                     Height = 32,
+                    Fill = Brushes.Black
                 };
 
                 Canvas.SetLeft(tower, x);
                 Canvas.SetTop(tower, y);
 
-                canvas.Children.Add(tower);
+                _towers.Add(tower);
+
+                if (player.ConnectionId == contextId)
+                {
+                    enemyCanvas.Children.Add(tower);
+                }
+                else
+                {
+                    canvas.Children.Add(tower);
+                }
             });
 
 
@@ -155,12 +188,6 @@ namespace TowerDefense.Client
                 {
                     item.SetSpeedRatio(item.SpeedRatio += 0.1);
                 }
-
-                //_animations[0].Item1.SpeedRatio += 1;
-                //_animations[0].Item2.SpeedRatio += 1;
-                ////_rectangles[0].BeginAnimation(, _animations[0].Item1);
-                //_rectangles[0].BeginAnimation(Canvas.TopProperty, _animations[0].Item2);
-
             });
         }
         private async void Create_Shooting_Enemy_Button_Click(object sender, RoutedEventArgs e)

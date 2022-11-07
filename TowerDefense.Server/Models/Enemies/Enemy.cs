@@ -4,6 +4,8 @@ namespace TowerDefense.Server.Models.Enemies
 {
     public class Enemy : Unit
     {
+        public int MaxHealth { get; set; }
+        public bool HasDead { get; set; }
         private readonly IMapMoveset _mapMoveset;
 
         public Enemy(IMapMoveset mapMoveset)
