@@ -14,5 +14,10 @@ namespace TowerDefense.Server.Models.Levels
         {
             return Map.GetMovePoints();
         }
+
+        public List<MovePoint> GetPath()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

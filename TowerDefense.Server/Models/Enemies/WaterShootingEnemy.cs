@@ -4,10 +4,10 @@ namespace TowerDefense.Server.Models.Enemies
 {
     public class WaterShootingEnemy : Enemy
     {
-        public WaterShootingEnemy(IMapMoveset mapMoveset) : base(mapMoveset)
+        public WaterShootingEnemy()
         {
             ImageSource = "/Images/Enemies/man-with-gun.png";
-            Health = 100;
+            Health = 200;
             Speed = 10;
         }
     }

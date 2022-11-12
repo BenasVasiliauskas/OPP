@@ -10,11 +10,11 @@ namespace TowerDefense.Server.Models
         {
             if (type == "S")
             {
-                return new DesertShootingEnemy(new DesertMap());
+                return new DesertShootingEnemy();
             }
             else if (type == "H")
             {
-                return new DesertHealingEnemy(new DesertMap());
+                return new DesertHealingEnemy();
             }
             else
             {

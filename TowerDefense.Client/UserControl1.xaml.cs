@@ -24,11 +24,11 @@ namespace TowerDefense.Client
                 });
             });
 
-            connection.On<List<MovePoint>>("GameStarted", async (path) =>
+            connection.On<List<MovePoint>, List<MovePoint>>("GameStarted", async (path, tile) =>
             {
                 game.Text = "GAME WILL START SOON";
                 await Wait();
-                this.Content = new UserControl2(connection, path);
+                this.Content = new UserControl2(connection, path, tile);
             });
         }
 

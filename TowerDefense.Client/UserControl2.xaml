@@ -14,7 +14,22 @@
             </Grid.ColumnDefinitions>
             <UserControl Grid.Column="0" >
                 <Grid Background="Aqua">
-                    <Canvas x:Name="canvas" Background="Transparent" MouseLeftButtonDown="Canvas_Click">
+                    <Canvas x:Name="canvas" MouseLeftButtonDown="Canvas_Click">
+                        <Canvas.Background>
+                            <DrawingBrush TileMode="Tile" Viewport="0,0,32,32" 
+                                     ViewportUnits="Absolute">
+                                <DrawingBrush.Drawing>
+                                    <GeometryDrawing>
+                                        <GeometryDrawing.Geometry>
+                                            <RectangleGeometry Rect="0,0,32,32"/>
+                                        </GeometryDrawing.Geometry>
+                                        <GeometryDrawing.Pen>
+                                            <Pen Brush="Gray" Thickness="1"/>
+                                        </GeometryDrawing.Pen>
+                                    </GeometryDrawing>
+                                </DrawingBrush.Drawing>
+                            </DrawingBrush>
+                        </Canvas.Background>
                         <Grid VerticalAlignment="Bottom">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="auto"></ColumnDefinition>
@@ -35,12 +50,29 @@
                             <Label x:Name="coordinate" Content="Label" RenderTransformOrigin="0.411,0.378"/>
                         </Label>
                         <Label x:Name="distance" Content="Label" Canvas.Left="321" Canvas.Top="22"/>
+                        <Button x:Name="aoe_resistance_button" Content="aoe res" Canvas.Left="271" Canvas.Top="41" Click="aoe_resistance_button_Click"/>
                     </Canvas>
                 </Grid>
             </UserControl>
             <UserControl Grid.Column="1">
                 <Grid Background="Red">
-                    <Canvas x:Name="enemyCanvas" Background="Transparent" MouseLeftButtonDown="Canvas_Click"></Canvas>
+                    <Canvas x:Name="enemyCanvas" MouseLeftButtonDown="Canvas_Click">
+                        <Canvas.Background>
+                            <DrawingBrush TileMode="Tile" Viewport="0,0,32,32" 
+                                     ViewportUnits="Absolute">
+                                <DrawingBrush.Drawing>
+                                    <GeometryDrawing>
+                                        <GeometryDrawing.Geometry>
+                                            <RectangleGeometry Rect="0,0,32,32"/>
+                                        </GeometryDrawing.Geometry>
+                                        <GeometryDrawing.Pen>
+                                            <Pen Brush="Gray" Thickness="1"/>
+                                        </GeometryDrawing.Pen>
+                                    </GeometryDrawing>
+                                </DrawingBrush.Drawing>
+                            </DrawingBrush>
+                        </Canvas.Background>
+                    </Canvas>
                 </Grid>
             </UserControl>
         </Grid>

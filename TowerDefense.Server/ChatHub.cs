@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using TowerDefense.Server.Models;
+using TowerDefense.Server.Models.Enemies;
 using TowerDefense.Server.Models.Levels;
+using TowerDefense.Server.Models.Towers;
 
 namespace TowerDefense.Server
 {
@@ -28,8 +30,9 @@ namespace TowerDefense.Server
                     var creator = new LevelCreator();
                     ILevel level = creator.FactoryMethod(_gameSession.CurrentGameLevel);
                     var path = level.GetMapMoveset();
+                    var tile = level.GetPath();
 
-                    await Clients.Clients(_gameSession.GetSessionIds()).SendAsync("GameStarted", path);
+                    await Clients.Clients(_gameSession.GetSessionIds()).SendAsync("GameStarted", path, tile);
                 }
             }
             else
@@ -54,12 +57,12 @@ namespace TowerDefense.Server
             await Clients.Others.SendAsync("TowerBuilt", tower, player, Context.ConnectionId, x, y);
         }
 
-        public async Task CreateEnemy(string enemyType)
+        public async Task CreateEnemy(string enemyType, bool aoeResistance)
         {
             var creator = new LevelCreator();
             AbstractFactory unitFactory = creator.FactoryMethod(_gameSession.CurrentGameLevel).GetAbstractFactory();
 
-            Unit enemy = unitFactory.CreateEnemy(enemyType);
+            var enemy = unitFactory.CreateEnemy(enemyType);
 
             var player = _gameSession.GetSessionPlayers().Where(p => p.ConnectionId == Context.ConnectionId).SingleOrDefault();
             var receiver = _gameSession.GetSessionPlayers().Where(p => p.ConnectionId != Context.ConnectionId).SingleOrDefault();
@@ -94,8 +97,8 @@ namespace TowerDefense.Server
             var player = _gameSession.GetSessionPlayers().Where(p => p.ConnectionId == Context.ConnectionId).SingleOrDefault();
             var receiver = _gameSession.GetSessionPlayers().Where(p => p.ConnectionId != Context.ConnectionId).SingleOrDefault();
 
-            await Clients.Caller.SendAsync("Ticked", player.Enemies);
-            await Clients.Others.SendAsync("Ticked", receiver.Enemies);
+            await Clients.Caller.SendAsync("Ticked", player.Enemies, player, Context.ConnectionId);
+            await Clients.Others.SendAsync("Ticked", receiver.Enemies, receiver, Context.ConnectionId);
         }
 
         public void EnemyDied(int index)
@@ -106,22 +109,25 @@ namespace TowerDefense.Server
 
         public async Task NearTower(int enemyIndex, int towerIndex, string connectionId)
         {
-            var player = _gameSession.GetSessionPlayers().Where(p => p.ConnectionId == connectionId).SingleOrDefault();
+            var player = _gameSession.GetSessionPlayers()
+                .Where(p => p.ConnectionId == connectionId)
+                .SingleOrDefault();
 
-            //var player = _gameSession.GetSessionPlayers().Where(p => p.ConnectionId == Context.ConnectionId).SingleOrDefault();
-            //var receiver = _gameSession.GetSessionPlayers().Where(p => p.ConnectionId != Context.ConnectionId).SingleOrDefault();
-            //Console.WriteLine($"{enemyIndex} {towerIndex} {player.Enemies.Count} {player.Towers.Count}");
-
-            if(player.Enemies.Count > 0 && player.Towers.Count > 0)
+            if (player.Enemies.Count > 0 && player.Towers.Count > 0)
             {
                 player.Enemies[enemyIndex].Health -= (int)player.Towers[towerIndex].Damage;
 
-                if(player.Enemies[enemyIndex].Health <= 0)
+                if (player.Enemies[enemyIndex].Health <= 0)
                 {
-                    await Clients.Caller.SendAsync("EnemyDeath", enemyIndex);
-                    await Clients.Others.SendAsync("EnemyDeath", enemyIndex);
+                    player.Enemies.RemoveAt(enemyIndex);
+                    await Clients.All.SendAsync("EnemyDeath", enemyIndex, player.ConnectionId);
                 }
-            }          
+            }
+        }
+
+        public async Task DrawBulletForEnemy(double x1, double x2, double y1, double y2)
+        {
+            await Clients.Others.SendAsync("DrawBullet", x1, x2, y1, y2);
         }
     }
 }

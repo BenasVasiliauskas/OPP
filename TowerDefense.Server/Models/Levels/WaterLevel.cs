@@ -15,6 +15,11 @@ namespace TowerDefense.Server.Models.Levels
             return Map.GetMovePoints();
         }
 
+        public List<MovePoint> GetPath()
+        {
+            return Map.GetPath();
+        }
+
         public void SetStats(Unit unit)
         {
             unit.Speed = 100;

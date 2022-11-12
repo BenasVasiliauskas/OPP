@@ -4,7 +4,7 @@
     {
         public WaterSingleShotTower()
         {
-            Damage = 5;
+            Damage = 10;
         }
     }
 }

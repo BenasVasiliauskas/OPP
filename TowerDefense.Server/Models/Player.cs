@@ -1,5 +1,4 @@
-﻿using TowerDefense.Server.Models.Enemies;
-using TowerDefense.Server.Observers;
+﻿using TowerDefense.Server.Observers;
 
 namespace TowerDefense.Server.Models
 {

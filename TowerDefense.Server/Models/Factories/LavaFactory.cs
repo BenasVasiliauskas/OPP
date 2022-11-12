@@ -10,11 +10,11 @@ namespace TowerDefense.Server.Models
         {
             if (type == "S")
             {
-                return new LavaShootingEnemy(new LavaMap());
+                return new LavaShootingEnemy();
             }
             else if(type == "H")
             {
-                return new LavaHealingEnemy(new LavaMap());
+                return new LavaHealingEnemy();
             }
             else
             {
