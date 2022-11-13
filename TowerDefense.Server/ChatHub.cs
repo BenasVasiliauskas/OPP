@@ -67,6 +67,7 @@ namespace TowerDefense.Server
             AbstractFactory unitFactory = creator.FactoryMethod(_gameSession.CurrentGameLevel).GetAbstractFactory();
 
             var enemy = unitFactory.CreateEnemy(enemyType);
+            enemy.SetUnitStrategy(new Walk(), enemy);
 
             var player = _gameSession.GetSessionPlayers().Where(p => p.ConnectionId == Context.ConnectionId).SingleOrDefault();
             var receiver = _gameSession.GetSessionPlayers().Where(p => p.ConnectionId != Context.ConnectionId).SingleOrDefault();
@@ -172,6 +173,7 @@ namespace TowerDefense.Server
             await Clients.All.SendAsync("EnemiesDoubled", player);
         }
 
+<<<<<<< HEAD
         public async Task GetLoan()
         {
             var player = _gameSession.GetSessionPlayers()
@@ -194,6 +196,30 @@ namespace TowerDefense.Server
             bank.undo();
 
             await Clients.Caller.SendAsync("UpdateMoney", player);
+=======
+        public async Task Pause(int index)
+        {
+            var player = _gameSession.GetSessionPlayers()
+                .Where(p => p.ConnectionId == Context.ConnectionId)
+                .SingleOrDefault();
+
+            player.Enemies[index].SetUnitStrategy(new SlowWalk(), player.Enemies[index]);
+
+
+            await Clients.All.SendAsync("Paused", player);
+        }
+
+        public async Task Unpause(int index)
+        {
+            var player = _gameSession.GetSessionPlayers()
+                .Where(p => p.ConnectionId == Context.ConnectionId)
+                .SingleOrDefault();
+
+            player.Enemies[index].SetUnitStrategy(new Walk(), player.Enemies[index]);
+
+
+            await Clients.All.SendAsync("Unpaused", player);
+>>>>>>> 3c53d1b7a9788702ae507d2157388ced7caf4428
         }
     }
 }

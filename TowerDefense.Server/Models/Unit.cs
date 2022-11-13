@@ -9,6 +9,7 @@ namespace TowerDefense.Server.Models
         public double Y { get; set; }
         public int Damage { get; set; }
         public double Speed { get; set; }
+        public double SpeedRatio { get; set; }
         public UnitStrategy UnitStrategy { get; private set; }
         public string ImageSource { get; set; }
         public int Health { get; set; }

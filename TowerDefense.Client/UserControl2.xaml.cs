@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -125,11 +126,16 @@ namespace TowerDefense.Client
 
                         var actualDistance = Math.Sqrt(Math.Pow(x - towerX, 2) + Math.Pow(y - towerY, 2));
 
-                        if (actualDistance < 128)
+                        if (actualDistance < 64)
                         {
+                            await _connection.InvokeAsync("Pause", i);
                             _enteredEnemyRects[j].Add(_myRectangles[i]);
                             _enteredEnemies[j].Add(enemies[i]);
                             player.Towers[j].EnemiesInRange.Add(enemies[i]);
+                        }
+                        else
+                        {
+                            await _connection.InvokeAsync("Unpause", i);
                         }
                     }
                 }
@@ -163,7 +169,7 @@ namespace TowerDefense.Client
                             canvas.Children.Add(l);
                             await _connection.InvokeAsync("DrawBulletForEnemy", l.X1, l.X2, l.Y1, l.Y2);
 
-                            await _connection.InvokeAsync("NearTower", _myRectangles.IndexOf(_enteredEnemyRects[j][enemyToShootIndex]), j, _connection.ConnectionId);
+                            //await _connection.InvokeAsync("NearTower", _myRectangles.IndexOf(_enteredEnemyRects[j][enemyToShootIndex]), j, _connection.ConnectionId);
                         }
                     }
                 }      
@@ -236,17 +242,6 @@ namespace TowerDefense.Client
 
                 Canvas.SetTop(rect, 96);
                 Canvas.SetLeft(rect, 0);
-                
-                if (player.ConnectionId == contextId) 
-                {
-                    _enemyRectangles.Add(rect);
-                    enemyCanvas.Children.Add(rect);
-                }
-                else
-                {
-                    _myRectangles.Add(rect);
-                    canvas.Children.Add(rect);
-                }
 
                 Path path = new Path();
                 PathFigure pathFigure = new PathFigure();
@@ -265,12 +260,12 @@ namespace TowerDefense.Client
                 path.Data = pathGeometry;
 
                 var animX = new DoubleAnimationUsingPath();
-                animX.Duration = TimeSpan.FromSeconds(10);
+                animX.Duration = TimeSpan.FromSeconds(unit.Speed);
                 animX.PathGeometry = pathGeometry;
                 animX.Source = PathAnimationSource.X;
 
                 var animY = new DoubleAnimationUsingPath();
-                animY.Duration = TimeSpan.FromSeconds(10);
+                animY.Duration = TimeSpan.FromSeconds(unit.Speed);
                 animY.PathGeometry = pathGeometry;
                 animY.Source = PathAnimationSource.Y;
 
@@ -285,9 +280,22 @@ namespace TowerDefense.Client
 
                 storyboard.Children.Add(animX);
                 storyboard.Children.Add(animY);
+
                 _myStoryboards.Add(storyboard);
 
+                if (player.ConnectionId == contextId) 
+                {
+                    _enemyRectangles.Add(rect);
+                    enemyCanvas.Children.Add(rect);
+                }
+                else
+                {
+                    _myRectangles.Add(rect);
+                    canvas.Children.Add(rect);
+                }
+
                 storyboard.Begin();
+
             });
 
             _connection.On<Player>("EnemiesDoubled", (player) =>
@@ -308,21 +316,6 @@ namespace TowerDefense.Client
 
                     Canvas.SetTop(rect, 96);
                     Canvas.SetLeft(rect, offssets[j]);
-
-                    if (player.ConnectionId == _connection.ConnectionId)
-                    {
-
-                        _myRectangles.Add(rect);
-                        canvas.Children.Add(rect);
-                    }
-                    else
-                    {
-                        _enemyRectangles.Add(rect);
-                        enemyCanvas.Children.Add(rect);
-
-                    }
-
-
 
                     Path path = new Path();
                     PathFigure pathFigure = new PathFigure();
@@ -361,10 +354,25 @@ namespace TowerDefense.Client
 
                     storyboard.Children.Add(animX);
                     storyboard.Children.Add(animY);
-                    _myStoryboards.Add(storyboard);
+                    
+
+
+                    if (player.ConnectionId == _connection.ConnectionId)
+                    {
+
+                        _myRectangles.Add(rect);
+                        canvas.Children.Add(rect);
+                        _myStoryboards.Add(storyboard);
+                    }
+                    else
+                    {
+                        _enemyRectangles.Add(rect);
+                        enemyCanvas.Children.Add(rect);
+                        _enemyStoryboards.Add(storyboard);
+                    }
 
                     storyboard.Begin();
-                }      
+                }
             });
 
             _connection.On<Unit, Player, string, int, int>("TowerBuilt", (unit, player, contextId, x, y) =>
@@ -401,9 +409,31 @@ namespace TowerDefense.Client
                 }
             });
 
+<<<<<<< HEAD
             _connection.On<Player>("UpdateMoney", (player) =>
             {
                 player_money.Content = player.Money;
+=======
+            _connection.On<Player>("Paused", async (player) =>
+            {
+                for (int k = 0; k < player.Enemies.Count; k++)
+                {
+                    //_myStoryboards[k].Pause();
+                    _myStoryboards[k].SetSpeedRatio(player.Enemies[k].SpeedRatio);
+                    //_myStoryboards[k].Resume();
+                }
+            });
+
+            _connection.On<Player>("Unpaused", async (player) =>
+            {
+                for (int k = 0; k < player.Enemies.Count; k++)
+                {
+                    //_myStoryboards[k].Pause();
+                    _myStoryboards[k].SetSpeedRatio(player.Enemies[k].SpeedRatio);
+                    //_myStoryboards[k].Resume();
+                }
+                //await delayedWork();
+>>>>>>> 3c53d1b7a9788702ae507d2157388ced7caf4428
             });
         }
         private async void Create_Shooting_Enemy_Button_Click(object sender, RoutedEventArgs e)
@@ -456,6 +486,7 @@ namespace TowerDefense.Client
             await _connection.InvokeAsync("DoubleUpEnemies");
         }
 
+<<<<<<< HEAD
         private async void Repay_Loan_Click(object sender, RoutedEventArgs e)
         {
             await _connection.InvokeAsync("PayLoan");
@@ -464,6 +495,16 @@ namespace TowerDefense.Client
         private async void Get_Loan_Click(object sender, RoutedEventArgs e)
         {
             await _connection.InvokeAsync("GetLoan");
+=======
+        private async void Speed_Click(object sender, RoutedEventArgs e)
+        {
+            await _connection.InvokeAsync("Pause");
+        }
+
+        private async Task delayedWork()
+        {
+            await Task.Delay(2000);
+>>>>>>> 3c53d1b7a9788702ae507d2157388ced7caf4428
         }
     }
 }
