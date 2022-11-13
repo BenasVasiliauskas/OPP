@@ -27,7 +27,7 @@ namespace TowerDefense.Server.Models
         {
             if (type == "S")
             {
-                return new WaterSingleShotTower(new HighestEnteredEnemyHealthShootingStyle(), true);
+                return new WaterSingleShotTower(new FirstEnteredRangeShootingStyle(), true);
             }
             else if (type == "A")
             {

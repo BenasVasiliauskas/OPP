@@ -1,10 +1,10 @@
-﻿using TowerDefense.Server.Models.Bridge;
-using TowerDefense.Server.Observers;
+﻿using TowerDefense.Server.Observers;
 
 namespace TowerDefense.Server.Models
 {
     public class Unit : Observer
     {
+        public Guid Id { get; set; } = Guid.NewGuid();
         public double X { get; set; }
         public double Y { get; set; }
         public int Damage { get; set; }
@@ -22,6 +22,17 @@ namespace TowerDefense.Server.Models
         public override void Update()
         {
             
+        }
+
+        public override bool Equals(object obj)
+        {
+            var unit = obj as Unit;
+
+            return unit.Id == Id;
+        }
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
     }
 }

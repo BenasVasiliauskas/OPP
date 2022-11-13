@@ -2,18 +2,7 @@
 
 namespace TowerDefense.Server.Models.Enemies
 {
-    public class DesertHealingEnemy : Enemy, IPrototype
+    public class DesertHealingEnemy : Enemy
     {
-        public Enemy MakeDeepCopy()
-        {
-            Enemy clone = (Enemy) MemberwiseClone();
-            clone.Health = MaxHealth / 2;
-            return clone;
-        }
-
-        public Enemy MakeShallowCopy()
-        {
-            return (Enemy) MemberwiseClone();
-        }
     }
 }
