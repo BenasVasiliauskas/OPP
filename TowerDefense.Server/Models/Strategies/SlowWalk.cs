@@ -4,7 +4,7 @@
     {
         public override void Act(Unit unit)
         {
-            unit.Speed = 10;
+            unit.SpeedRatio = 0.2;
         }
     }
 }

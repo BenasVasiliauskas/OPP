@@ -48,6 +48,7 @@
                         </Grid>
                         <Label Canvas.Left="316" Canvas.Top="48"/>
                         <Button x:Name="DoubleUp" Content="Double up" Canvas.Left="295" Canvas.Top="40" Click="DoubleUp_Click"/>
+                        <Button x:Name="Speed" Content="spyd" Canvas.Left="324" Canvas.Top="74" Click="Speed_Click"/>
                     </Canvas>
                 </Grid>
             </UserControl>

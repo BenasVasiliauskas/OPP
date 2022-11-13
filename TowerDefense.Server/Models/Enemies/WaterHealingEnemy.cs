@@ -7,7 +7,7 @@ namespace TowerDefense.Server.Models.Enemies
         public WaterHealingEnemy()
         {
             ImageSource = "/Images/Enemies/priest.png";
-            Speed = 1;
+            Speed = 10;
             Health = 10;
         }
     }

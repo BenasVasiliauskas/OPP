@@ -66,6 +66,7 @@ namespace TowerDefense.Server
             AbstractFactory unitFactory = creator.FactoryMethod(_gameSession.CurrentGameLevel).GetAbstractFactory();
 
             var enemy = unitFactory.CreateEnemy(enemyType);
+            enemy.SetUnitStrategy(new Walk(), enemy);
 
             var player = _gameSession.GetSessionPlayers().Where(p => p.ConnectionId == Context.ConnectionId).SingleOrDefault();
             var receiver = _gameSession.GetSessionPlayers().Where(p => p.ConnectionId != Context.ConnectionId).SingleOrDefault();
@@ -169,6 +170,30 @@ namespace TowerDefense.Server
             receiver.Enemies = newEnemies;
 
             await Clients.All.SendAsync("EnemiesDoubled", player);
+        }
+
+        public async Task Pause(int index)
+        {
+            var player = _gameSession.GetSessionPlayers()
+                .Where(p => p.ConnectionId == Context.ConnectionId)
+                .SingleOrDefault();
+
+            player.Enemies[index].SetUnitStrategy(new SlowWalk(), player.Enemies[index]);
+
+
+            await Clients.All.SendAsync("Paused", player);
+        }
+
+        public async Task Unpause(int index)
+        {
+            var player = _gameSession.GetSessionPlayers()
+                .Where(p => p.ConnectionId == Context.ConnectionId)
+                .SingleOrDefault();
+
+            player.Enemies[index].SetUnitStrategy(new Walk(), player.Enemies[index]);
+
+
+            await Clients.All.SendAsync("Unpaused", player);
         }
     }
 }
