@@ -173,7 +173,6 @@ namespace TowerDefense.Server
             await Clients.All.SendAsync("EnemiesDoubled", player);
         }
 
-<<<<<<< HEAD
         public async Task GetLoan()
         {
             var player = _gameSession.GetSessionPlayers()
@@ -196,7 +195,8 @@ namespace TowerDefense.Server
             bank.undo();
 
             await Clients.Caller.SendAsync("UpdateMoney", player);
-=======
+        }
+
         public async Task Pause(int index)
         {
             var player = _gameSession.GetSessionPlayers()
@@ -219,7 +219,6 @@ namespace TowerDefense.Server
 
 
             await Clients.All.SendAsync("Unpaused", player);
->>>>>>> 3c53d1b7a9788702ae507d2157388ced7caf4428
         }
     }
 }
