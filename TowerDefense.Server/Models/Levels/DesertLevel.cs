@@ -16,6 +16,11 @@ namespace TowerDefense.Server.Models
             return Map.GetMovePoints();
         }
 
+        public List<MovePoint> GetPath()
+        {
+            throw new NotImplementedException();
+        }
+
         public void SetStats(Unit unit)
         {
             unit.Speed = 50;

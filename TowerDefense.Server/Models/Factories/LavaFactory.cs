@@ -10,11 +10,11 @@ namespace TowerDefense.Server.Models
         {
             if (type == "S")
             {
-                return new ShootingEnemy(new LavaMap());
+                return new LavaShootingEnemy();
             }
             else if(type == "H")
             {
-                return new HealingEnemy(new LavaMap());
+                return new LavaHealingEnemy();
             }
             else
             {
@@ -26,11 +26,11 @@ namespace TowerDefense.Server.Models
         {
             if (type == "S")
             {
-                return new SingleShotTower();
+                return new LavaSingleShotTower();
             }
             else if(type == "A")
             {
-                return new AoeTower();
+                return new LavaAoeTower();
             }
             else
             {

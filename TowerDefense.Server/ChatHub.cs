@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using TowerDefense.Server.Models;
+using TowerDefense.Server.Models.Enemies;
 using TowerDefense.Server.Models.Levels;
+using TowerDefense.Server.Models.Towers;
 
 namespace TowerDefense.Server
 {
@@ -28,8 +30,9 @@ namespace TowerDefense.Server
                     var creator = new LevelCreator();
                     ILevel level = creator.FactoryMethod(_gameSession.CurrentGameLevel);
                     var path = level.GetMapMoveset();
+                    var tile = level.GetPath();
 
-                    await Clients.Clients(_gameSession.GetSessionIds()).SendAsync("GameStarted", path);
+                    await Clients.Clients(_gameSession.GetSessionIds()).SendAsync("GameStarted", path, tile);
                 }
             }
             else
@@ -45,22 +48,32 @@ namespace TowerDefense.Server
 
             Unit tower = unitFactory.CreateTower(towerType);
 
-            await Clients.Caller.SendAsync("TowerBuilt", tower, x, y);
+            var player = _gameSession.GetSessionPlayers().Where(p => p.ConnectionId == Context.ConnectionId).SingleOrDefault();
+            var receiver = _gameSession.GetSessionPlayers().Where(p => p.ConnectionId != Context.ConnectionId).SingleOrDefault();
+
+            player.Towers.Add(tower);
+
+            await Clients.Caller.SendAsync("TowerBuilt", tower, receiver, Context.ConnectionId, x, y);
+            await Clients.Others.SendAsync("TowerBuilt", tower, player, Context.ConnectionId, x, y);
         }
 
-        public async Task CreateEnemy(string enemyType)
+        public async Task CreateEnemy(string enemyType, bool aoeResistance)
         {
             var creator = new LevelCreator();
             AbstractFactory unitFactory = creator.FactoryMethod(_gameSession.CurrentGameLevel).GetAbstractFactory();
 
-            Unit enemy = unitFactory.CreateEnemy(enemyType);
+            var enemy = unitFactory.CreateEnemy(enemyType);
 
             var player = _gameSession.GetSessionPlayers().Where(p => p.ConnectionId == Context.ConnectionId).SingleOrDefault();
+            var receiver = _gameSession.GetSessionPlayers().Where(p => p.ConnectionId != Context.ConnectionId).SingleOrDefault();
+
             player.Subject.Attach(enemy);
 
-            player.Enemies.Add(enemy);
+            receiver.Enemies.Add(enemy);
 
-            await Clients.Others.SendAsync("EnemyCreated", enemy);
+            await Clients.Caller.SendAsync("EnemyCreated", enemy, player, Context.ConnectionId);
+            await Clients.Others.SendAsync("EnemyCreated", enemy, receiver, Context.ConnectionId);
+
         }
 
         public async Task ChangeLevel()
@@ -75,46 +88,46 @@ namespace TowerDefense.Server
             var player = _gameSession.GetSessionPlayers().Where(p => p.ConnectionId == Context.ConnectionId).SingleOrDefault();
 
             player.Subject.IncreasePower();
-            await Clients.Others.SendAsync("PoweredUp");
+
+            await Clients.All.SendAsync("PoweredUp");
         }
 
         public async Task GameTimerTick()
         {
             var player = _gameSession.GetSessionPlayers().Where(p => p.ConnectionId == Context.ConnectionId).SingleOrDefault();
+            var receiver = _gameSession.GetSessionPlayers().Where(p => p.ConnectionId != Context.ConnectionId).SingleOrDefault();
 
-            foreach (var enemy in player.Enemies)
-            {
-                //double moveX = 0;
-                //double moveY = 0;
-                //var direction = "";
-
-                //var currentInterval = map.Move.Where(map => enemy.X >= map.FromX && enemy.X <= map.ToX && enemy.Y >= map.FromY && enemy.Y <= map.ToY).SingleOrDefault();
-
-                //direction = currentInterval.Direction;
-
-                //switch (direction)
-                //{
-                //    case "right":
-                //        moveX = enemy.Speed;
-                //        break;
-                //    case "down":
-                //        moveY = enemy.Speed;
-                //        break;
-                //    default:
-                //        break;
-                //}
-
-                //enemy.X += moveX;
-                //enemy.Y += moveY;
-
-            }
-            await Clients.Others.SendAsync("Ticked", player);
+            await Clients.Caller.SendAsync("Ticked", player.Enemies, player, Context.ConnectionId);
+            await Clients.Others.SendAsync("Ticked", receiver.Enemies, receiver, Context.ConnectionId);
         }
 
         public void EnemyDied(int index)
         {
             var player = _gameSession.GetSessionPlayers().Where(p => p.ConnectionId != Context.ConnectionId).SingleOrDefault();
             player.Enemies.RemoveAt(index);
+        }
+
+        public async Task NearTower(int enemyIndex, int towerIndex, string connectionId)
+        {
+            var player = _gameSession.GetSessionPlayers()
+                .Where(p => p.ConnectionId == connectionId)
+                .SingleOrDefault();
+
+            if (player.Enemies.Count > 0 && player.Towers.Count > 0)
+            {
+                player.Enemies[enemyIndex].Health -= (int)player.Towers[towerIndex].Damage;
+
+                if (player.Enemies[enemyIndex].Health <= 0)
+                {
+                    player.Enemies.RemoveAt(enemyIndex);
+                    await Clients.All.SendAsync("EnemyDeath", enemyIndex, player.ConnectionId);
+                }
+            }
+        }
+
+        public async Task DrawBulletForEnemy(double x1, double x2, double y1, double y2)
+        {
+            await Clients.Others.SendAsync("DrawBullet", x1, x2, y1, y2);
         }
     }
 }

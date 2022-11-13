@@ -6,5 +6,6 @@ namespace TowerDefense.Server.Models.Levels
     {
         public AbstractFactory GetAbstractFactory();
         public List<MovePoint> GetMapMoveset();
+        public List<MovePoint> GetPath();
     }
 }
