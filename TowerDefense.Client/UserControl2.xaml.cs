@@ -400,6 +400,11 @@ namespace TowerDefense.Client
                     item.SetSpeedRatio(item.SpeedRatio += 0.1);
                 }
             });
+
+            _connection.On<Player>("UpdateMoney", (player) =>
+            {
+                player_money.Content = player.Money;
+            });
         }
         private async void Create_Shooting_Enemy_Button_Click(object sender, RoutedEventArgs e)
         {
@@ -449,6 +454,16 @@ namespace TowerDefense.Client
         private async void DoubleUp_Click(object sender, RoutedEventArgs e)
         {
             await _connection.InvokeAsync("DoubleUpEnemies");
+        }
+
+        private async void Repay_Loan_Click(object sender, RoutedEventArgs e)
+        {
+            await _connection.InvokeAsync("PayLoan");
+        }
+
+        private async void Get_Loan_Click(object sender, RoutedEventArgs e)
+        {
+            await _connection.InvokeAsync("GetLoan");
         }
     }
 }

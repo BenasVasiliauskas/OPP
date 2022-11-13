@@ -2,6 +2,7 @@
 using TowerDefense.Server.Models;
 using TowerDefense.Server.Models.Enemies;
 using TowerDefense.Server.Models.Levels;
+using TowerDefense.Server.Models.Powerups;
 using TowerDefense.Server.Models.Towers;
 
 namespace TowerDefense.Server
@@ -169,6 +170,30 @@ namespace TowerDefense.Server
             receiver.Enemies = newEnemies;
 
             await Clients.All.SendAsync("EnemiesDoubled", player);
+        }
+
+        public async Task GetLoan()
+        {
+            var player = _gameSession.GetSessionPlayers()
+                .Where(p => p.ConnectionId != Context.ConnectionId)
+                .SingleOrDefault();
+
+            Loan bank = new Loan(player);
+            bank.execute();
+
+            await Clients.Caller.SendAsync("UpdateMoney", player);
+        }
+
+        public async Task PayLoan()
+        {
+            var player = _gameSession.GetSessionPlayers()
+                .Where(p => p.ConnectionId != Context.ConnectionId)
+                .SingleOrDefault();
+
+            Loan bank = new Loan(player);
+            bank.undo();
+
+            await Clients.Caller.SendAsync("UpdateMoney", player);
         }
     }
 }
