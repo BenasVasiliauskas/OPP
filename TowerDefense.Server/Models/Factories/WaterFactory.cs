@@ -1,4 +1,5 @@
-﻿using TowerDefense.Server.Models.Enemies;
+﻿using TowerDefense.Server.Models.Bridge;
+using TowerDefense.Server.Models.Enemies;
 using TowerDefense.Server.Models.Maps;
 using TowerDefense.Server.Models.Towers;
 
@@ -22,15 +23,15 @@ namespace TowerDefense.Server.Models
             }
         }
 
-        public override Unit CreateTower(string type)
+        public override Tower CreateTower(string type)
         {
             if (type == "S")
             {
-                return new WaterSingleShotTower();
+                return new WaterSingleShotTower(new HighestEnteredEnemyHealthShootingStyle(), true);
             }
             else if (type == "A")
             {
-                return new WaterAoeTower();
+                return new WaterAoeTower(new FirstEnteredRangeShootingStyle());
             }
             else
             {

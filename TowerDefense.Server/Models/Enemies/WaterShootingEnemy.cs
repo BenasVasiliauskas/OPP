@@ -7,7 +7,7 @@ namespace TowerDefense.Server.Models.Enemies
         public WaterShootingEnemy()
         {
             ImageSource = "/Images/Enemies/man-with-gun.png";
-            Health = 200;
+            Health = 2500;
             Speed = 10;
         }
     }

@@ -1,4 +1,5 @@
-﻿using TowerDefense.Server.Observers;
+﻿using TowerDefense.Server.Models.Bridge;
+using TowerDefense.Server.Observers;
 
 namespace TowerDefense.Server.Models
 {
@@ -11,6 +12,7 @@ namespace TowerDefense.Server.Models
         public UnitStrategy UnitStrategy { get; private set; }
         public string ImageSource { get; set; }
         public int Health { get; set; }
+        public List<Unit> EnemiesInRange { get; set; } = new();
         public void SetUnitStrategy(UnitStrategy UnitStrategy, Unit unit)
         {
             this.UnitStrategy = UnitStrategy;

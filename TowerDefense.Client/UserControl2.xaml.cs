@@ -11,7 +11,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using TowerDefense.Server.Models;
+using TowerDefense.Server.Models.Bridge;
 using TowerDefense.Server.Models.Maps;
+using TowerDefense.Server.Models.Towers;
 
 namespace TowerDefense.Client
 {
@@ -29,8 +31,9 @@ namespace TowerDefense.Client
         private List<(DoubleAnimationUsingPath, DoubleAnimationUsingPath)> _animations = new();
         private List<Storyboard> storyboards = new();
         private bool _nextEnemyAoeResistant = false;
-        private List<Unit> _enteredEnemies = new();
-        private List<Rectangle> _enteredEnemyRects = new();
+        private List<List<Unit>> _enteredEnemies = new();
+        private List<List<Rectangle>> _enteredEnemyRects = new();
+        private List<int> _survivedEnemies = new();
 
         DispatcherTimer gameTimer = new();
 
@@ -73,7 +76,7 @@ namespace TowerDefense.Client
                 GameTimerEvent(sender, e);
             };
 
-            gameTimer.Interval = TimeSpan.FromMilliseconds(100);
+            gameTimer.Interval = TimeSpan.FromMilliseconds(10);
             gameTimer.Start();
         }
 
@@ -84,80 +87,84 @@ namespace TowerDefense.Client
 
         private void ActionLoaded(object sender, RoutedEventArgs e)
         {
-            _connection.On<List<Unit>, Player, string>("Ticked", async (enemies, player, contextId) =>
+            _connection.On<List<Unit>, List<Tower>, Player, string>("Ticked", async (enemies, towers, player, contextId) =>
             {
                 _enteredEnemyRects = new();
                 _enteredEnemies = new();
-                foreach (var item in canvas.Children.OfType<Line>())
+                _survivedEnemies = new();
+
+                _towers.ForEach(t => 
                 {
-                    canvas.Children.Remove(item);
-                }
+                    _enteredEnemyRects.Add(new List<Rectangle>());
+                });
+
+                _towers.ForEach(t =>
+                {
+                    _enteredEnemies.Add(new List<Unit>());
+                });
 
                 for (int i = 0; i < _myRectangles.Count; i++)
                 {
                     double x = Canvas.GetLeft(_myRectangles[i]);
                     double y = Canvas.GetTop(_myRectangles[i]);
 
-                    for(int j = 0; j < _towers.Count; j++)
+                    if (x == 320 && y == 320)
+                    {
+                        await _connection.InvokeAsync("EnemySurvived", i);
+                    }
+
+                    for (int j = 0; j < _towers.Count; j++)
                     {
                         double towerX = Canvas.GetLeft(_towers[j]);
                         double towerY = Canvas.GetTop(_towers[j]);
 
-                        var actualDistance = Math.Abs(x - towerX) + Math.Abs(y - towerY);
-                        distance.Content = actualDistance.ToString();
+                        var actualDistance = Math.Sqrt(Math.Pow(x - towerX, 2) + Math.Pow(y - towerY, 2));
+                        coordinate.Content = actualDistance.ToString();
 
                         if (actualDistance < 128)
                         {
-                            _enteredEnemyRects.Add(_myRectangles[i]);
-                            _enteredEnemies.Add(enemies[i]);
-                        }
-                        else
-                        {
-                            if (_enteredEnemyRects.Contains(_myRectangles[i]))
-                            {
-                                _enteredEnemyRects.Remove(_myRectangles[i]);
-                                _enteredEnemies.Remove(enemies[i]);
-                            }
+                            _enteredEnemyRects[j].Add(_myRectangles[i]);
+                            _enteredEnemies[j].Add(enemies[i]);
+                            player.Towers[j].EnemiesInRange.Add(enemies[i]);
                         }
                     }
                 }
-                //if(_towers.Count > 0 && _enteredEnemies.Count > 0)
-                //{
-                //    Line l = new Line();
-                //    l.Stroke = new SolidColorBrush(Colors.Red);
-                //    l.StrokeThickness = 2.0;
-                //    l.StrokeDashArray = new DoubleCollection(new[] { 5.0 });
 
-                //    l.X1 = Canvas.GetLeft(_enteredEnemyRects.First()) + _enteredEnemyRects.First().Width / 2;
-                //    l.X2 = Canvas.GetLeft(_towers[0]) + _towers[0].Width / 2;
-                //    l.Y1 = Canvas.GetTop(_enteredEnemyRects.First()) + _enteredEnemyRects.First().Height / 2;
-                //    l.Y2 = Canvas.GetTop(_towers[0]) + _towers[0].Height / 2;
-                //    canvas.Children.Add(l);
-                //    await _connection.InvokeAsync("NearTower", _myRectangles.IndexOf(_enteredEnemyRects.First()), 0, _connection.ConnectionId);
-
-                //}
-
-                if (_towers.Count > 0 && player.ConnectionId == contextId)
+                for (int j = 0; j < _towers.Count; j++)
                 {
-                    Line l = new Line();
-                    l.Stroke = new SolidColorBrush(Colors.Green);
-                    l.StrokeThickness = 2.0;
-                    l.StrokeDashArray = new DoubleCollection(new[] { 5.0 });
+                    if(_enteredEnemyRects[j].Count > 0)
+                    {
+                        foreach (var item in canvas.Children.OfType<Line>())
+                        {
+                            canvas.Children.Remove(item);
+                        }
 
-                    var maxHealthEnemy = _enteredEnemies.MaxBy(x => x.Health);
-                    var maxHealthEnemyIndex = _enteredEnemies.IndexOf(maxHealthEnemy);
+                        Line l = new Line();
+                        l.Stroke = new SolidColorBrush(Colors.Red);
+                        l.StrokeThickness = 2.0;
+                        l.StrokeDashArray = new DoubleCollection(new[] { 5.0 });
 
-                    l.X1 = Canvas.GetLeft(_enteredEnemyRects[maxHealthEnemyIndex]) + _enteredEnemyRects[maxHealthEnemyIndex].Width / 2;
-                    l.X2 = Canvas.GetLeft(_towers[0]) + _towers[0].Width / 2;
-                    l.Y1 = Canvas.GetTop(_enteredEnemyRects[maxHealthEnemyIndex]) + _enteredEnemyRects[maxHealthEnemyIndex].Height / 2;
-                    l.Y2 = Canvas.GetTop(_towers[0]) + _towers[0].Height / 2;
+                        if (towers[j].isFirstStyle)
+                        {
+                            towers[j]._shootingStyle = new FirstEnteredRangeShootingStyle();
+                        }
+                        else
+                        {
+                            towers[j]._shootingStyle = new HighestEnteredEnemyHealthShootingStyle();
+                        }
 
-                    canvas.Children.Add(l);
-                    await _connection.InvokeAsync("DrawBulletForEnemy", l.X1, l.X2, l.Y1, l.Y2);
+                        var enemyToShootIndex = towers[j]._shootingStyle.GetEnemyToShoot(player, j);
 
-                    await _connection.InvokeAsync("NearTower", _myRectangles.IndexOf(_enteredEnemyRects[maxHealthEnemyIndex]), 0, _connection.ConnectionId);
+                        l.X1 = Canvas.GetLeft(_enteredEnemyRects[j][enemyToShootIndex]) + _enteredEnemyRects[j][enemyToShootIndex].Width / 2;
+                        l.X2 = Canvas.GetLeft(_towers[j]) + _towers[j].Width / 2;
+                        l.Y1 = Canvas.GetTop(_enteredEnemyRects[j][enemyToShootIndex]) + _enteredEnemyRects[j][enemyToShootIndex].Height / 2;
+                        l.Y2 = Canvas.GetTop(_towers[j]) + _towers[j].Height / 2;
+                        canvas.Children.Add(l);
+                        await _connection.InvokeAsync("DrawBulletForEnemy", l.X1, l.X2, l.Y1, l.Y2);
 
-                }
+                        await _connection.InvokeAsync("NearTower", _myRectangles.IndexOf(_enteredEnemyRects[j][enemyToShootIndex]), j, _connection.ConnectionId);
+                    }
+                }      
             });
 
             _connection.On<int, string>("EnemyDeath", (index, connectionId) =>
@@ -166,22 +173,40 @@ namespace TowerDefense.Client
                 {
                     canvas.Children.Remove(_myRectangles[index]);
                     _myRectangles.RemoveAt(index);
+                    //_enteredEnemyRects.RemoveAt(0);
                     //_enteredEnemies.RemoveAt(0);
+                    //player.Towers[0].EnemiesInRange.Remove(enemies[0]);
                 }
                 else
                 {
                     enemyCanvas.Children.Remove(_enemyRectangles[index]);
                     _enemyRectangles.RemoveAt(index);
+                    //_enteredEnemyRects.RemoveAt(0);
                     //_enteredEnemies.RemoveAt(0);
+                }
+            });
+
+            _connection.On<int, string>("EnemySurvived", (index, connectionId) =>
+            {
+                if (_connection.ConnectionId == connectionId)
+                {
+                    canvas.Children.Remove(_myRectangles[index]);
+                    _myRectangles.RemoveAt(index);
+
+                }
+                else
+                {
+                    enemyCanvas.Children.Remove(_enemyRectangles[index]);
+                    _enemyRectangles.RemoveAt(index);
                 }
             });
 
             _connection.On<double, double, double, double>("DrawBullet", (x1, x2, y1, y2) =>
             {
-                foreach (var item in enemyCanvas.Children.OfType<Line>())
-                {
-                    enemyCanvas.Children.Remove(item);
-                }
+                //foreach (var item in enemyCanvas.Children.OfType<Line>())
+                //{
+                //    enemyCanvas.Children.Remove(item);
+                //}
 
                 Line l = new Line();
                 l.Stroke = new SolidColorBrush(Colors.Green);
