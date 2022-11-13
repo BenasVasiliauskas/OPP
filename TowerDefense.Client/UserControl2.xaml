@@ -47,15 +47,11 @@
                             <Button Grid.Column="3" Content="Tower" Click="TowerButton_Click"></Button>
                         </Grid>
                         <Label Canvas.Left="316" Canvas.Top="48"/>
-<<<<<<< HEAD
-                        <Button x:Name="DoubleUp" Content="Double up" Canvas.Left="294" Canvas.Top="63" Click="DoubleUp_Click"/>
                         <Button x:Name="Repay_Loan" Content="Repay Loan" Canvas.Left="291" Canvas.Top="39" Click="Repay_Loan_Click"/>
                         <Button x:Name="Get_Loan" Content="Get a Loan" Canvas.Left="294" Canvas.Top="10" Click="Get_Loan_Click"/>
                         <Label x:Name="player_money" Content="0" Canvas.Left="162" Canvas.Top="83"/>
-=======
                         <Button x:Name="DoubleUp" Content="Double up" Canvas.Left="295" Canvas.Top="40" Click="DoubleUp_Click"/>
                         <Button x:Name="Speed" Content="spyd" Canvas.Left="324" Canvas.Top="74" Click="Speed_Click"/>
->>>>>>> 3c53d1b7a9788702ae507d2157388ced7caf4428
                     </Canvas>
                 </Grid>
             </UserControl>

@@ -10,9 +10,9 @@ EndProject
 Project("{911E67C6-3D85-4FCE-B560-20A9C3E3FF48}") = "TowerDefense.Client1", "TowerDefense.Client\bin\Debug\net6.0-windows\TowerDefense.Client1.exe", "{43E7A6C2-E181-42DF-B122-3B5E70FC6D44}"
 	ProjectSection(DebuggerProjectSystem) = preProject
 		PortSupplier = 00000000-0000-0000-0000-000000000000
-		Executable = C:\Users\arnas\Desktop\OPP\TowerDefense.Client\bin\Debug\net6.0-windows\TowerDefense.Client1.exe
+		Executable = D:\KTU\IV\I_OOP\TowerDefense.Client\bin\Debug\net6.0-windows\TowerDefense.Client1.exe
 		RemoteMachine = CBR-PC
-		StartingDirectory = C:\Users\arnas\Desktop\OPP\TowerDefense.Client\bin\Debug\net6.0-windows
+		StartingDirectory = D:\KTU\IV\I_OOP\TowerDefense.Client\bin\Debug\net6.0-windows
 		Environment = Default
 		LaunchingEngine = 00000000-0000-0000-0000-000000000000
 		UseLegacyDebugEngines = No

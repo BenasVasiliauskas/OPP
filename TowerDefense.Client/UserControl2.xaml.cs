@@ -409,11 +409,11 @@ namespace TowerDefense.Client
                 }
             });
 
-<<<<<<< HEAD
             _connection.On<Player>("UpdateMoney", (player) =>
             {
                 player_money.Content = player.Money;
-=======
+            });
+
             _connection.On<Player>("Paused", async (player) =>
             {
                 for (int k = 0; k < player.Enemies.Count; k++)
@@ -433,7 +433,6 @@ namespace TowerDefense.Client
                     //_myStoryboards[k].Resume();
                 }
                 //await delayedWork();
->>>>>>> 3c53d1b7a9788702ae507d2157388ced7caf4428
             });
         }
         private async void Create_Shooting_Enemy_Button_Click(object sender, RoutedEventArgs e)
@@ -486,7 +485,6 @@ namespace TowerDefense.Client
             await _connection.InvokeAsync("DoubleUpEnemies");
         }
 
-<<<<<<< HEAD
         private async void Repay_Loan_Click(object sender, RoutedEventArgs e)
         {
             await _connection.InvokeAsync("PayLoan");
@@ -495,7 +493,8 @@ namespace TowerDefense.Client
         private async void Get_Loan_Click(object sender, RoutedEventArgs e)
         {
             await _connection.InvokeAsync("GetLoan");
-=======
+        }
+
         private async void Speed_Click(object sender, RoutedEventArgs e)
         {
             await _connection.InvokeAsync("Pause");
@@ -504,7 +503,6 @@ namespace TowerDefense.Client
         private async Task delayedWork()
         {
             await Task.Delay(2000);
->>>>>>> 3c53d1b7a9788702ae507d2157388ced7caf4428
         }
     }
 }
