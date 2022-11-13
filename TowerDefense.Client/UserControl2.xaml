@@ -46,11 +46,8 @@
                             <Button Grid.Column="2" Content="Power up" Click="PowerUp_Click"></Button>
                             <Button Grid.Column="3" Content="Tower" Click="TowerButton_Click"></Button>
                         </Grid>
-                        <Label Canvas.Left="316" Canvas.Top="48">
-                            <Label x:Name="coordinate" Content="Label" RenderTransformOrigin="0.411,0.378"/>
-                        </Label>
-                        <Label x:Name="distance" Content="Label" Canvas.Left="321" Canvas.Top="22"/>
-                        <Button x:Name="aoe_resistance_button" Content="aoe res" Canvas.Left="271" Canvas.Top="41" Click="aoe_resistance_button_Click"/>
+                        <Label Canvas.Left="316" Canvas.Top="48"/>
+                        <Button x:Name="DoubleUp" Content="Double up" Canvas.Left="295" Canvas.Top="40" Click="DoubleUp_Click"/>
                     </Canvas>
                 </Grid>
             </UserControl>

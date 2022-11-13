@@ -2,23 +2,13 @@
 
 namespace TowerDefense.Server.Models.Enemies
 {
-    public class WaterHealingEnemy : Enemy, IPrototype
+    public class WaterHealingEnemy : Enemy
     {
         public WaterHealingEnemy()
         {
             ImageSource = "/Images/Enemies/priest.png";
             Speed = 1;
-            Health = 100;
-        }
-
-        public Enemy MakeDeepCopy()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Enemy MakeShallowCopy()
-        {
-            throw new NotImplementedException();
+            Health = 10;
         }
     }
 }

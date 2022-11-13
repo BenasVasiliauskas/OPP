@@ -1,10 +1,11 @@
-﻿namespace TowerDefense.Server.Models.Towers
+﻿using TowerDefense.Server.Models.Bridge;
+
+namespace TowerDefense.Server.Models.Towers
 {
     public class WaterAoeTower : Tower
     {
-        public WaterAoeTower()
+        public WaterAoeTower(IShootingStyle shootingStyle) : base(shootingStyle)
         {
-            Damage = 1;
         }
     }
 }

@@ -48,10 +48,13 @@ namespace TowerDefense.Server
 
             Unit tower = unitFactory.CreateTower(towerType);
 
+            var test = tower as Tower;
+            test._shootingStyle = null;
+            
             var player = _gameSession.GetSessionPlayers().Where(p => p.ConnectionId == Context.ConnectionId).SingleOrDefault();
             var receiver = _gameSession.GetSessionPlayers().Where(p => p.ConnectionId != Context.ConnectionId).SingleOrDefault();
 
-            player.Towers.Add(tower);
+            player.Towers.Add(test);
 
             await Clients.Caller.SendAsync("TowerBuilt", tower, receiver, Context.ConnectionId, x, y);
             await Clients.Others.SendAsync("TowerBuilt", tower, player, Context.ConnectionId, x, y);
@@ -69,7 +72,7 @@ namespace TowerDefense.Server
 
             player.Subject.Attach(enemy);
 
-            receiver.Enemies.Add(enemy);
+            receiver.Enemies.Add(enemy as Enemy);
 
             await Clients.Caller.SendAsync("EnemyCreated", enemy, player, Context.ConnectionId);
             await Clients.Others.SendAsync("EnemyCreated", enemy, receiver, Context.ConnectionId);
@@ -97,8 +100,8 @@ namespace TowerDefense.Server
             var player = _gameSession.GetSessionPlayers().Where(p => p.ConnectionId == Context.ConnectionId).SingleOrDefault();
             var receiver = _gameSession.GetSessionPlayers().Where(p => p.ConnectionId != Context.ConnectionId).SingleOrDefault();
 
-            await Clients.Caller.SendAsync("Ticked", player.Enemies, player, Context.ConnectionId);
-            await Clients.Others.SendAsync("Ticked", receiver.Enemies, receiver, Context.ConnectionId);
+            await Clients.Caller.SendAsync("Ticked", player.Enemies, player.Towers, player, Context.ConnectionId);
+            await Clients.Others.SendAsync("Ticked", receiver.Enemies, receiver.Towers, receiver, Context.ConnectionId);
         }
 
         public void EnemyDied(int index)
@@ -128,6 +131,44 @@ namespace TowerDefense.Server
         public async Task DrawBulletForEnemy(double x1, double x2, double y1, double y2)
         {
             await Clients.Others.SendAsync("DrawBullet", x1, x2, y1, y2);
+        }
+
+        public async Task EnemySurvived(Enemy enemy, int index)
+        {
+            var player = _gameSession.GetSessionPlayers()
+                .Where(p => p.ConnectionId == Context.ConnectionId)
+                .SingleOrDefault();
+
+            var receiver = _gameSession.GetSessionPlayers()
+                .Where(p => p.ConnectionId != Context.ConnectionId)
+                .SingleOrDefault();
+
+            player.Enemies.Remove(enemy);
+
+            await Clients.All.SendAsync("EnemyDeath", index, player.ConnectionId);
+        }
+
+        public async Task DoubleUpEnemies()
+        {
+            var receiver = _gameSession.GetSessionPlayers()
+                .Where(p => p.ConnectionId != Context.ConnectionId)
+                .SingleOrDefault();
+
+            var player = _gameSession.GetSessionPlayers()
+                .Where(p => p.ConnectionId != Context.ConnectionId)
+                .SingleOrDefault();
+
+            var newEnemies = new List<Enemy>();
+
+            foreach (var enemy in receiver.Enemies)
+            {
+                newEnemies.Add(enemy);
+                newEnemies.Add(enemy.MakeDeepCopy());
+            }
+
+            receiver.Enemies = newEnemies;
+
+            await Clients.All.SendAsync("EnemiesDoubled", player);
         }
     }
 }
