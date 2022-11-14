@@ -7,8 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\Enemies\blue_cross.png" />
+    <None Remove="Images\Enemies\blue_gun.png" />
     <None Remove="Images\Enemies\man-with-gun.png" />
     <None Remove="Images\Enemies\priest.png" />
+    <None Remove="Images\Enemies\red_cross.png" />
+    <None Remove="Images\Enemies\red_gun.png" />
+    <None Remove="Images\Enemies\yellow_cross.png" />
+    <None Remove="Images\Enemies\yellow_gun.png" />
     <None Remove="Images\Paths\grass.jpg" />
   </ItemGroup>
 
@@ -21,8 +27,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Images\Enemies\man-with-gun.png" />
-    <Resource Include="Images\Enemies\priest.png" />
+    <Resource Include="Images\Enemies\blue_cross.png" />
+    <Resource Include="Images\Enemies\blue_gun.png" />
+    <Resource Include="Images\Enemies\red_cross.png" />
+    <Resource Include="Images\Enemies\red_gun.png" />
+    <Resource Include="Images\Enemies\yellow_cross.png" />
+    <Resource Include="Images\Enemies\yellow_gun.png" />
     <Resource Include="Images\Paths\grass.jpg" />
   </ItemGroup>
 

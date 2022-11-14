@@ -24,7 +24,7 @@ namespace TowerDefense.Client
     /// </summary>
     public partial class UserControl2 : UserControl
     {
-        private readonly List<MovePoint> _path;
+        private List<MovePoint> _path;
         private HubConnection _connection;
         private bool _towerBuildSelected = false;
         private List<Rectangle> _myRectangles = new();
@@ -227,6 +227,11 @@ namespace TowerDefense.Client
                 l.Y2 = y2;
 
                 enemyCanvas.Children.Add(l);
+            });
+
+            _connection.On("LevelChanged", () =>
+            {
+                
             });
 
             _connection.On<Unit, Player, string>("EnemyCreated", (unit, player, contextId) =>

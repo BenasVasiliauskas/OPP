@@ -1,4 +1,5 @@
 ﻿using TowerDefense.Server.Models.Bridge;
+using TowerDefense.Server.Models.Builder;
 using TowerDefense.Server.Models.Enemies;
 using TowerDefense.Server.Models.Maps;
 using TowerDefense.Server.Models.Towers;
@@ -7,15 +8,20 @@ namespace TowerDefense.Server.Models
 {
     public class LavaFactory : AbstractFactory
     {
+        private Director _director = new();
         public override Unit CreateEnemy(string type)
         {
             if (type == "S")
             {
-                return new LavaShootingEnemy();
+                var enemyBuilder = new EnemyBuilder<LavaShootingEnemy>();
+                _director.ConstructLavaShootingEnemy(enemyBuilder);
+                return enemyBuilder.GetEnemy();
             }
             else if(type == "H")
             {
-                return new LavaHealingEnemy();
+                var enemyBuilder = new EnemyBuilder<LavaHealingEnemy>();
+                _director.ConstructLavaHealingEnemy(enemyBuilder);
+                return enemyBuilder.GetEnemy();
             }
             else
             {

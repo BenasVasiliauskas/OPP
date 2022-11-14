@@ -52,7 +52,7 @@ namespace TowerDefense.Server
         {
             _gameSession.ChangeLevel();
 
-            await Clients.All.SendAsync("LevelChanged", _gameSession.CurrentGameLevel);
+            await Clients.All.SendAsync("LevelChanged");
         }
 
         public async Task PowerUp()

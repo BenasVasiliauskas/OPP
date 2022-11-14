@@ -14,13 +14,13 @@ namespace TowerDefense.Server.Models
             if (type == "S")
             {
                 var enemyBuilder = new EnemyBuilder<WaterShootingEnemy>();
-                _director.ConstructShootingEnemy(enemyBuilder);
+                _director.ConstructWaterShootingEnemy(enemyBuilder);
                 return enemyBuilder.GetEnemy();
             }
             else if (type == "H")
             {
                 var enemyBuilder = new EnemyBuilder<WaterHealingEnemy>();
-                _director.ConstructHealingEnemy(enemyBuilder);
+                _director.ConstructWaterHealingEnemy(enemyBuilder);
                 return enemyBuilder.GetEnemy();
             }
             else
