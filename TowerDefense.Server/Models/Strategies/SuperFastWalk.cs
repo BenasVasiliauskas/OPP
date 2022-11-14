@@ -1,6 +1,6 @@
 ﻿namespace TowerDefense.Server.Models
 {
-    public class Walk : UnitStrategy
+    public class SuperFastWalk : UnitStrategy
     {
         public override void Act(Unit unit)
         {

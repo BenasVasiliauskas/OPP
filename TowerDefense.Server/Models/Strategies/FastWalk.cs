@@ -1,10 +1,10 @@
 ﻿namespace TowerDefense.Server.Models
 {
-    public class Walk : UnitStrategy
+    public class FastWalk : UnitStrategy
     {
         public override void Act(Unit unit)
         {
-            unit.SpeedRatio = 1;
+            unit.SpeedRatio = 5;
         }
     }
 }
