@@ -23,5 +23,10 @@
             }
             return this.player.GetMoney().ToString();
         }
+
+        public string GetNormal()
+        {
+            return this.player.GetMoney().ToString();
+        }
     }
 }
