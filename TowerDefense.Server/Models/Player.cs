@@ -12,5 +12,10 @@ namespace TowerDefense.Server.Models
         public List<Tower> Towers { get; set; } = new();
         public Subject Subject { get; set; } = new();
         public int Money { get; set; }
+
+        public int GetMoney()
+        {
+            return this.Money;
+        }
     }
 }
