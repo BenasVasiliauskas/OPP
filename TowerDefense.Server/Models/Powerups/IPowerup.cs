@@ -1,6 +1,9 @@
 ﻿namespace TowerDefense.Server.Models.Powerups
 {
-    public class IPowerup
+    public interface IPowerup
     {
+        public void execute();
+
+        public void undo();
     }
 }

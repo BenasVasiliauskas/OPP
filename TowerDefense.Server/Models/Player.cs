@@ -11,6 +11,6 @@ namespace TowerDefense.Server.Models
         public List<Enemy> Enemies { get; set; } = new();
         public List<Tower> Towers { get; set; } = new();
         public Subject Subject { get; set; } = new();
-
+        public int Money { get; set; }
     }
 }

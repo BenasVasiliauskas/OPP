@@ -409,6 +409,11 @@ namespace TowerDefense.Client
                 }
             });
 
+            _connection.On<Player>("UpdateMoney", (player) =>
+            {
+                player_money.Content = player.Money;
+            });
+
             _connection.On<Player>("Paused", async (player) =>
             {
                 for (int k = 0; k < player.Enemies.Count; k++)
@@ -478,6 +483,16 @@ namespace TowerDefense.Client
         private async void DoubleUp_Click(object sender, RoutedEventArgs e)
         {
             await _connection.InvokeAsync("DoubleUpEnemies");
+        }
+
+        private async void Repay_Loan_Click(object sender, RoutedEventArgs e)
+        {
+            await _connection.InvokeAsync("PayLoan");
+        }
+
+        private async void Get_Loan_Click(object sender, RoutedEventArgs e)
+        {
+            await _connection.InvokeAsync("GetLoan");
         }
 
         private async void Speed_Click(object sender, RoutedEventArgs e)
