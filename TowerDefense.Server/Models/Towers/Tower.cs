@@ -1,8 +1,9 @@
 ﻿using TowerDefense.Server.Models.Bridge;
+using TowerDefense.Server.Models.Decorator;
 
 namespace TowerDefense.Server.Models.Towers
 {
-    public class Tower : Unit
+    public class Tower : Unit, ITowerUpgrade
     {
         public IShootingStyle _shootingStyle;
         public bool isFirstStyle { get; set; }
@@ -19,6 +20,11 @@ namespace TowerDefense.Server.Models.Towers
         public override void Update()
         {
             Damage *= 2;
+        }
+
+        public void UpgradeTower(Tower tower)
+        {
+            
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using TowerDefense.Server.Models.Bridge;
+using TowerDefense.Server.Models.Builder;
 using TowerDefense.Server.Models.Enemies;
 using TowerDefense.Server.Models.Maps;
 using TowerDefense.Server.Models.Towers;
@@ -7,15 +8,20 @@ namespace TowerDefense.Server.Models
 {
     public class WaterFactory : AbstractFactory
     {
+        private Director _director = new();
         public override Unit CreateEnemy(string type)
         {
             if (type == "S")
             {
-                return new WaterShootingEnemy();
+                var enemyBuilder = new EnemyBuilder<WaterShootingEnemy>();
+                _director.ConstructShootingEnemy(enemyBuilder);
+                return enemyBuilder.GetEnemy();
             }
             else if (type == "H")
             {
-                return new WaterHealingEnemy();
+                var enemyBuilder = new EnemyBuilder<WaterHealingEnemy>();
+                _director.ConstructHealingEnemy(enemyBuilder);
+                return enemyBuilder.GetEnemy();
             }
             else
             {

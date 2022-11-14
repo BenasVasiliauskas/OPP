@@ -446,11 +446,6 @@ namespace TowerDefense.Client
             _nextEnemyAoeResistant = false;
         }
 
-        private async void Button1_Click(object sender, RoutedEventArgs e)
-        {
-            await _connection.InvokeAsync("ChangeLevel");
-        }
-
         private void TowerButton_Click(object sender, RoutedEventArgs e)
         {
             _towerBuildSelected = true;
@@ -503,6 +498,11 @@ namespace TowerDefense.Client
         private async Task delayedWork()
         {
             await Task.Delay(2000);
+        }
+
+        private async void ChangeLevel_Click(object sender, RoutedEventArgs e)
+        {
+            await _connection.InvokeAsync("ChangeLevel");
         }
     }
 }

@@ -52,6 +52,7 @@
                         <Label x:Name="player_money" Content="0" Canvas.Left="162" Canvas.Top="83"/>
                         <Button x:Name="DoubleUp" Content="Double up" Canvas.Left="295" Canvas.Top="40" Click="DoubleUp_Click"/>
                         <Button x:Name="Speed" Content="spyd" Canvas.Left="324" Canvas.Top="74" Click="Speed_Click"/>
+                        <Button x:Name="ChangeLevel" Content="Change Level" Canvas.Left="23" Canvas.Top="397" HorizontalAlignment="Left" VerticalAlignment="Top" Click="ChangeLevel_Click"/>
                     </Canvas>
                 </Grid>
             </UserControl>

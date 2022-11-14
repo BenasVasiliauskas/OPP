@@ -3,8 +3,6 @@ using TowerDefense.Server.Models;
 using TowerDefense.Server.Models.Enemies;
 using TowerDefense.Server.Models.Levels;
 using TowerDefense.Server.Models.Powerups;
-using TowerDefense.Server.Models.Towers;
-using TowerDefense.Server.Services;
 
 namespace TowerDefense.Server
 {
