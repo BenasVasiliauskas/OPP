@@ -7,6 +7,7 @@ namespace TowerDefense.Server.Models.Enemies
         public WaterHealingEnemy()
         {
             Speed = 10;
+            SpeedRatio = 0.5;
         }
     }
 }
