@@ -2,7 +2,7 @@
 {
     public class Loan : IPowerup
     {
-        public int LoanAmount = 1000;
+        public int LoanAmount = 100;
         public Player player { get; set; }
 
         public Loan(Player player)

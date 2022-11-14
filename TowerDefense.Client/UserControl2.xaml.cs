@@ -12,6 +12,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using TowerDefense.Server.Models;
+using TowerDefense.Server.Models.Adapter;
 using TowerDefense.Server.Models.Bridge;
 using TowerDefense.Server.Models.Maps;
 using TowerDefense.Server.Models.Towers;
@@ -411,7 +412,8 @@ namespace TowerDefense.Client
 
             _connection.On<Player>("UpdateMoney", (player) =>
             {
-                player_money.Content = player.Money;
+                MoneyFormat format = new MoneyFormat(player);
+                player_money.Content = format.GetHumanReadable();
             });
 
             _connection.On<Player>("Paused", async (player) =>
