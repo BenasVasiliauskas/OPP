@@ -3,7 +3,6 @@ using TowerDefense.Server.Models.Towers;
 using TowerDefense.Server.Models;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.Authentication;
-using TowerDefense.Server.Models.Decorator;
 
 namespace TowerDefense.Server.Services
 {

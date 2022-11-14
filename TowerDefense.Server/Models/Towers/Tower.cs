@@ -1,9 +1,8 @@
 ﻿using TowerDefense.Server.Models.Bridge;
-using TowerDefense.Server.Models.Decorator;
 
 namespace TowerDefense.Server.Models.Towers
 {
-    public class Tower : Unit, ITowerUpgrade
+    public class Tower : Unit
     {
         public IShootingStyle _shootingStyle;
         public bool isFirstStyle { get; set; }
