@@ -83,6 +83,14 @@ namespace TowerDefense.Server.Services
 
             await _hubContext.Clients.All.SendAsync("EnemiesDoubled", player);
         }
+        public async Task PowerUp(string connectionId)
+        {
+            var player = _gameSession.GetSessionPlayers().Where(p => p.ConnectionId == connectionId).SingleOrDefault();
+
+            player.Subject.IncreasePower();
+
+            await _hubContext.Clients.All.SendAsync("PoweredUp");
+        }
 
         public async Task Pause(int index, string connectionId)
         {

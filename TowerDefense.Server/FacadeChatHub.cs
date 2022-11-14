@@ -48,6 +48,10 @@ namespace TowerDefense.Server
         {
             await enemiesService.DoubleUpEnemies(connectionId);
         }
+        public async Task PowerUp(string connectionId)
+        {
+            await enemiesService.PowerUp(connectionId);
+        }
 
         public async Task Pause(int index, string connectionId)
         {

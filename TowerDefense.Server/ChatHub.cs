@@ -55,14 +55,6 @@ namespace TowerDefense.Server
             await Clients.All.SendAsync("LevelChanged");
         }
 
-        public async Task PowerUp()
-        {
-            var player = _gameSession.GetSessionPlayers().Where(p => p.ConnectionId == Context.ConnectionId).SingleOrDefault();
-
-            player.Subject.IncreasePower();
-
-            await Clients.All.SendAsync("PoweredUp");
-        }
 
         public async Task GameTimerTick()
         {
@@ -105,6 +97,10 @@ namespace TowerDefense.Server
         public async Task DoubleUpEnemies()
         {
             await _chatHub.DoubleUpEnemies(Context.ConnectionId);
+        }
+        public async Task PowerUp()
+        {
+            await _chatHub.PowerUp(Context.ConnectionId);
         }
 
         public async Task GetLoan()
