@@ -25,15 +25,15 @@ namespace TowerDefense.Server.Models
             
         }
 
-        public override bool Equals(object obj)
-        {
-            var unit = obj as Unit;
+        //public override bool Equals(object obj)
+        //{
+        //    var unit = obj as Unit;
 
-            return unit.Id == Id;
-        }
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
+        //    return unit.Id == Id;
+        //}
+        //public override int GetHashCode()
+        //{
+        //    return base.GetHashCode();
+        //}
     }
 }

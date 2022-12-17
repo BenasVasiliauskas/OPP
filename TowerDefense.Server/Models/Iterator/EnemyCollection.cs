@@ -3,7 +3,7 @@ using TowerDefense.Server.Models.Enemies;
 
 namespace TowerDefense.Server.Models.Iterator
 {
-    public class EnemyCollection
+    public class EnemyCollection : IUnitCollection
     {
         public List<Enemy> Collection { get; set; } = new();
 
@@ -40,6 +40,11 @@ namespace TowerDefense.Server.Models.Iterator
         public int EnemyCount()
         {
             return Collection.Count;
+        }
+
+        public IEnumerator<Enemy> GetEnumerator()
+        {
+            return new EnemyIterator(this);
         }
     }
 }

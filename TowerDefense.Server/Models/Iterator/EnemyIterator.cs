@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections;
 using TowerDefense.Server.Models.Enemies;
 
 namespace TowerDefense.Server.Models.Iterator
 {
-    public class EnemyIterator : Iterator
+    public class EnemyIterator : IEnumerator<Enemy>
     {
         private readonly EnemyCollection _collection;
         private int _position = -1;
@@ -17,16 +13,19 @@ namespace TowerDefense.Server.Models.Iterator
             _collection = collection;
         }
 
-        public override object Current()
+        public Enemy Current => _collection.GetEnemies()[_position];
+
+        object IEnumerator.Current => Current;
+
+        public void Dispose()
         {
-            return _collection.GetEnemies()[_position];
         }
 
-        public override bool MoveNext()
+        public bool MoveNext()
         {
             int updatedPosition = _position + 1;
 
-            if(updatedPosition >= 0 && updatedPosition < _collection.GetEnemies().Count)
+            if (updatedPosition >= 0 && updatedPosition < _collection.GetEnemies().Count)
             {
                 _position = updatedPosition;
                 return true;
@@ -35,7 +34,7 @@ namespace TowerDefense.Server.Models.Iterator
             return false;
         }
 
-        public override void Reset()
+        public void Reset()
         {
             _position = 0;
         }
