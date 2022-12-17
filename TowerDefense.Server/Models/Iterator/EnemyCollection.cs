@@ -3,48 +3,43 @@ using TowerDefense.Server.Models.Enemies;
 
 namespace TowerDefense.Server.Models.Iterator
 {
-    public class EnemyCollection : IteratorAggregate
+    public class EnemyCollection
     {
-        private readonly List<Enemy> _collection = new();
+        public List<Enemy> Collection { get; set; } = new();
 
         public List<Enemy> GetEnemies()
         {
-            return _collection;
+            return Collection;
         }
 
         public Enemy GetEnemy(int index)
         {
-            return _collection[index];
+            return Collection[index];
         }
 
         public void AddEnemy(Enemy enemy)
         {
-            _collection.Add(enemy);
+            Collection.Add(enemy);
         }
 
         public bool RemoveEnemy(Enemy enemy)
         {
-            return _collection.Remove(enemy);
+            return Collection.Remove(enemy);
         }
 
         public bool RemoveEnemyAt(int index)
         {
-            if (index < 0 || index >= _collection.Count)
+            if (index < 0 || index >= Collection.Count)
             {
                 return false;
             }
-            _collection.RemoveAt(index);
+            Collection.RemoveAt(index);
             return true;
         }
 
         public int EnemyCount()
         {
-            return _collection.Count;
-        }
-
-        public override IEnumerator GetEnumerator()
-        {
-            return new EnemyIterator(this);
+            return Collection.Count;
         }
     }
 }

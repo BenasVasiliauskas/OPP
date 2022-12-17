@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using System.Text.Json;
 using TowerDefense.Server.Models;
 using TowerDefense.Server.Models.Enemies;
+using TowerDefense.Server.Models.Iterator;
 using TowerDefense.Server.Models.Levels;
 using TowerDefense.Server.Models.Powerups;
 using TowerDefense.Server.Models.Towers;
@@ -73,8 +75,7 @@ namespace TowerDefense.Server
             var receiver = _gameSession.GetSessionPlayers().Where(p => p.ConnectionId != Context.ConnectionId).SingleOrDefault();
 
             player.Subject.Attach(enemy);
-
-            receiver.Enemies.Add(enemy as Enemy);
+            receiver.Enemies.AddEnemy(enemy as Enemy);
 
             await Clients.Caller.SendAsync("EnemyCreated", enemy, player, Context.ConnectionId);
             await Clients.Others.SendAsync("EnemyCreated", enemy, receiver, Context.ConnectionId);
@@ -102,14 +103,14 @@ namespace TowerDefense.Server
             var player = _gameSession.GetSessionPlayers().Where(p => p.ConnectionId == Context.ConnectionId).SingleOrDefault();
             var receiver = _gameSession.GetSessionPlayers().Where(p => p.ConnectionId != Context.ConnectionId).SingleOrDefault();
 
-            await Clients.Caller.SendAsync("Ticked", player.Enemies, player.Towers, player, Context.ConnectionId);
-            await Clients.Others.SendAsync("Ticked", receiver.Enemies, receiver.Towers, receiver, Context.ConnectionId);
+            await Clients.Caller.SendAsync("Ticked", player.Enemies, player.Towers, null, Context.ConnectionId);
+            await Clients.Others.SendAsync("Ticked", receiver.Enemies, receiver.Towers, null, Context.ConnectionId);
         }
 
         public void EnemyDied(int index)
         {
             var player = _gameSession.GetSessionPlayers().Where(p => p.ConnectionId != Context.ConnectionId).SingleOrDefault();
-            player.Enemies.RemoveAt(index);
+            player.Enemies.RemoveEnemyAt(index);
         }
 
         public async Task NearTower(int enemyIndex, int towerIndex, string connectionId)
@@ -118,13 +119,13 @@ namespace TowerDefense.Server
                 .Where(p => p.ConnectionId == connectionId)
                 .SingleOrDefault();
 
-            if (player.Enemies.Count > 0 && player.Towers.Count > 0)
+            if (player.Enemies.EnemyCount() > 0 && player.Towers.Count > 0)
             {
-                player.Enemies[enemyIndex].Health -= (int)player.Towers[towerIndex].Damage;
+                player.Enemies.GetEnemy(enemyIndex).Health -= (int)player.Towers[towerIndex].Damage;
 
-                if (player.Enemies[enemyIndex].Health <= 0)
+                if (player.Enemies.GetEnemy(enemyIndex).Health <= 0)
                 {
-                    player.Enemies.RemoveAt(enemyIndex);
+                    player.Enemies.RemoveEnemyAt(enemyIndex);
                     await Clients.All.SendAsync("EnemyDeath", enemyIndex, player.ConnectionId);
                 }
             }
@@ -145,7 +146,7 @@ namespace TowerDefense.Server
                 .Where(p => p.ConnectionId != Context.ConnectionId)
                 .SingleOrDefault();
 
-            player.Enemies.Remove(enemy);
+            player.Enemies.RemoveEnemy(enemy);
 
             await Clients.All.SendAsync("EnemyDeath", index, player.ConnectionId);
         }
@@ -160,13 +161,20 @@ namespace TowerDefense.Server
                 .Where(p => p.ConnectionId != Context.ConnectionId)
                 .SingleOrDefault();
 
-            var newEnemies = new List<Enemy>();
+            var newEnemies = new EnemyCollection();
 
-            foreach (var enemy in receiver.Enemies)
+            for(int i = 0; i < receiver.Enemies.EnemyCount(); i++)
             {
-                newEnemies.Add(enemy);
-                newEnemies.Add(enemy.MakeDeepCopy());
+                newEnemies.AddEnemy(receiver.Enemies.GetEnemy(i));
+                newEnemies.AddEnemy(receiver.Enemies.GetEnemy(i).MakeDeepCopy());
             }
+
+            //foreach (var enemy in receiver.Enemies)
+            //{
+            //    var casted = (Enemy)enemy;
+            //    newEnemies.AddEnemy(casted);
+            //    newEnemies.AddEnemy(casted.MakeDeepCopy());
+            //}
 
             receiver.Enemies = newEnemies;
 
@@ -203,7 +211,7 @@ namespace TowerDefense.Server
                 .Where(p => p.ConnectionId == Context.ConnectionId)
                 .SingleOrDefault();
 
-            player.Enemies[index].SetUnitStrategy(new SlowWalk(), player.Enemies[index]);
+            player.Enemies.GetEnemy(index).SetUnitStrategy(new SlowWalk(), player.Enemies.GetEnemy(index));
 
 
             await Clients.All.SendAsync("Paused", player);
@@ -215,7 +223,7 @@ namespace TowerDefense.Server
                 .Where(p => p.ConnectionId == Context.ConnectionId)
                 .SingleOrDefault();
 
-            player.Enemies[index].SetUnitStrategy(new Walk(), player.Enemies[index]);
+            player.Enemies.GetEnemy(index).SetUnitStrategy(new Walk(), player.Enemies.GetEnemy(index));
 
 
             await Clients.All.SendAsync("Unpaused", player);

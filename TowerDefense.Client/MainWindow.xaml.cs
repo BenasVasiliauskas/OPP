@@ -26,7 +26,7 @@ namespace TowerDefense.Client
         {
             InitializeComponent();
 
-            connection = new HubConnectionBuilder()
+            connection = new HubConnectionBuilder()       
                 .WithUrl("https://localhost:7226/hub")
                 .Build();
         }

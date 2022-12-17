@@ -13,6 +13,7 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using TowerDefense.Server.Models;
 using TowerDefense.Server.Models.Bridge;
+using TowerDefense.Server.Models.Iterator;
 using TowerDefense.Server.Models.Maps;
 using TowerDefense.Server.Models.Towers;
 
@@ -89,12 +90,13 @@ namespace TowerDefense.Client
 
         private void ActionLoaded(object sender, RoutedEventArgs e)
         {
-            _connection.On<List<Unit>, List<Tower>, Player, string>("Ticked", async (enemies, towers, player, contextId) =>
+            _connection.On<EnemyCollection, List<Tower>, Player, string>("Ticked", async (enemies, towers, player, contextId) =>
             {
                 foreach (var item in canvas.Children.OfType<Line>())
                 {
                     canvas.Children.Remove(item);
                 }
+
                 _enteredEnemyRects = new();
                 _enteredEnemies = new();
                 _survivedEnemies = new();
@@ -116,7 +118,7 @@ namespace TowerDefense.Client
 
                     if (x == 320 && y == 320)
                     {
-                        await _connection.InvokeAsync("EnemySurvived", enemies[i], i);
+                        await _connection.InvokeAsync("EnemySurvived", enemies.GetEnemy(i), i);
                     }
 
                     for (int j = 0; j < _towers.Count; j++)
@@ -130,8 +132,8 @@ namespace TowerDefense.Client
                         {
                             await _connection.InvokeAsync("Pause", i);
                             _enteredEnemyRects[j].Add(_myRectangles[i]);
-                            _enteredEnemies[j].Add(enemies[i]);
-                            player.Towers[j].EnemiesInRange.Add(enemies[i]);
+                            _enteredEnemies[j].Add(enemies.GetEnemy(i));
+                            //player.Towers[j].EnemiesInRange.Add(enemies[i]);
                         }
                         else
                         {
@@ -139,9 +141,6 @@ namespace TowerDefense.Client
                         }
                     }
                 }
-
-                if(player.ConnectionId == _connection.ConnectionId)
-                {
                     for (int j = 0; j < _towers.Count; j++)
                     {
                         if (_enteredEnemyRects[j].Count > 0)
@@ -160,19 +159,19 @@ namespace TowerDefense.Client
                                 towers[j]._shootingStyle = new HighestEnteredEnemyHealthShootingStyle();
                             }
 
-                            var enemyToShootIndex = towers[j]._shootingStyle.GetEnemyToShoot(player, j);
+                            //var enemyToShootIndex = towers[j]._shootingStyle.GetEnemyToShoot(player, j);
 
-                            l.X1 = Canvas.GetLeft(_enteredEnemyRects[j][enemyToShootIndex]) + _enteredEnemyRects[j][enemyToShootIndex].Width / 2;
-                            l.X2 = Canvas.GetLeft(_towers[j]) + _towers[j].Width / 2;
-                            l.Y1 = Canvas.GetTop(_enteredEnemyRects[j][enemyToShootIndex]) + _enteredEnemyRects[j][enemyToShootIndex].Height / 2;
-                            l.Y2 = Canvas.GetTop(_towers[j]) + _towers[j].Height / 2;
-                            canvas.Children.Add(l);
-                            await _connection.InvokeAsync("DrawBulletForEnemy", l.X1, l.X2, l.Y1, l.Y2);
+                            //l.X1 = Canvas.GetLeft(_enteredEnemyRects[j][enemyToShootIndex]) + _enteredEnemyRects[j][enemyToShootIndex].Width / 2;
+                            //l.X2 = Canvas.GetLeft(_towers[j]) + _towers[j].Width / 2;
+                            //l.Y1 = Canvas.GetTop(_enteredEnemyRects[j][enemyToShootIndex]) + _enteredEnemyRects[j][enemyToShootIndex].Height / 2;
+                            //l.Y2 = Canvas.GetTop(_towers[j]) + _towers[j].Height / 2;
+                            //canvas.Children.Add(l);
+                            //await _connection.InvokeAsync("DrawBulletForEnemy", l.X1, l.X2, l.Y1, l.Y2);
 
                             //await _connection.InvokeAsync("NearTower", _myRectangles.IndexOf(_enteredEnemyRects[j][enemyToShootIndex]), j, _connection.ConnectionId);
                         }
                     }
-                }      
+                    
             });
 
             _connection.On<int, string>("EnemyDeath", (index, connectionId) =>
@@ -229,59 +228,8 @@ namespace TowerDefense.Client
             });
 
             _connection.On<Unit, Player, string>("EnemyCreated", (unit, player, contextId) =>
-            {               
-                var rect = new Rectangle
-                {
-                    Width = 32,
-                    Height = 32,
-                    Fill = new ImageBrush
-                    {
-                        ImageSource = new BitmapImage(new Uri($"pack://application:,,,{unit.ImageSource}"))
-                    }
-                };
-
-                Canvas.SetTop(rect, 96);
-                Canvas.SetLeft(rect, 0);
-
-                Path path = new Path();
-                PathFigure pathFigure = new PathFigure();
-                pathFigure.StartPoint = new Point(_path[0].X, _path[0].Y);
-
-                for (int i = 1; i < _path.Count; i++)
-                {
-                    LineSegment segment = new LineSegment();
-                    segment.Point = new Point(_path[i].X, _path[i].Y);
-                    pathFigure.Segments.Add(segment);
-                }
-
-                PathGeometry pathGeometry = new PathGeometry();
-                pathGeometry.Figures.Add(pathFigure);
-
-                path.Data = pathGeometry;
-
-                var animX = new DoubleAnimationUsingPath();
-                animX.Duration = TimeSpan.FromSeconds(unit.Speed);
-                animX.PathGeometry = pathGeometry;
-                animX.Source = PathAnimationSource.X;
-
-                var animY = new DoubleAnimationUsingPath();
-                animY.Duration = TimeSpan.FromSeconds(unit.Speed);
-                animY.PathGeometry = pathGeometry;
-                animY.Source = PathAnimationSource.Y;
-
-                _animations.Add((animX, animY));
-
-                Storyboard storyboard = new Storyboard();
-
-                Storyboard.SetTarget(animX, rect);
-                Storyboard.SetTargetProperty(animX, new PropertyPath(Canvas.LeftProperty));
-                Storyboard.SetTarget(animY, rect);
-                Storyboard.SetTargetProperty(animY, new PropertyPath(Canvas.TopProperty));
-
-                storyboard.Children.Add(animX);
-                storyboard.Children.Add(animY);
-
-                _myStoryboards.Add(storyboard);
+            {
+                var rect = Animation.CreateAnimation(unit, _path, _animations, _myStoryboards);
 
                 if (player.ConnectionId == contextId) 
                 {
@@ -293,16 +241,14 @@ namespace TowerDefense.Client
                     _myRectangles.Add(rect);
                     canvas.Children.Add(rect);
                 }
-
-                storyboard.Begin();
-
+                _myStoryboards.Last().Begin();
             });
 
             _connection.On<Player>("EnemiesDoubled", (player) =>
             {
                 var offssets = new List<int> { 224, 160, 96, 32 };
 
-                for (int j = 0; j < player.Enemies.Count / 2; j++)
+                for (int j = 0; j < player.Enemies.EnemyCount() / 2; j++)
                 {
                     var rect = new Rectangle
                     {
@@ -310,7 +256,7 @@ namespace TowerDefense.Client
                         Height = 32,
                         Fill = new ImageBrush
                         {
-                            ImageSource = new BitmapImage(new Uri($"pack://application:,,,{player.Enemies[j].ImageSource}"))
+                            ImageSource = new BitmapImage(new Uri($"pack://application:,,,{player.Enemies.GetEnemy(j).ImageSource}"))
                         }
                     };
 
@@ -416,20 +362,20 @@ namespace TowerDefense.Client
 
             _connection.On<Player>("Paused", async (player) =>
             {
-                for (int k = 0; k < player.Enemies.Count; k++)
+                for (int k = 0; k < player.Enemies.EnemyCount(); k++)
                 {
                     //_myStoryboards[k].Pause();
-                    _myStoryboards[k].SetSpeedRatio(player.Enemies[k].SpeedRatio);
+                    _myStoryboards[k].SetSpeedRatio(player.Enemies.GetEnemy(k).SpeedRatio);
                     //_myStoryboards[k].Resume();
                 }
             });
 
             _connection.On<Player>("Unpaused", async (player) =>
             {
-                for (int k = 0; k < player.Enemies.Count; k++)
+                for (int k = 0; k < player.Enemies.EnemyCount(); k++)
                 {
                     //_myStoryboards[k].Pause();
-                    _myStoryboards[k].SetSpeedRatio(player.Enemies[k].SpeedRatio);
+                    _myStoryboards[k].SetSpeedRatio(player.Enemies.GetEnemy(k).SpeedRatio);
                     //_myStoryboards[k].Resume();
                 }
                 //await delayedWork();
