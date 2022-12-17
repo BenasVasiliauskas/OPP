@@ -5,6 +5,7 @@ using TowerDefense.Server.Models.Enemies;
 using TowerDefense.Server.Models.Iterator;
 using TowerDefense.Server.Models.Levels;
 using TowerDefense.Server.Models.Powerups;
+using TowerDefense.Server.Models.Service;
 using TowerDefense.Server.Models.Towers;
 
 namespace TowerDefense.Server
@@ -12,6 +13,13 @@ namespace TowerDefense.Server
     public class ChatHub : Hub
     {
         private readonly GameSession _gameSession = GameSession.GetIstance();
+        private readonly IEnemyService _enemyService;
+
+        public ChatHub(IEnemyService enemyService)
+        {
+            _enemyService = enemyService;
+        }
+
         public async Task SendMessage(string message)
         {
             if (!_gameSession.IsGameStarted)
@@ -65,17 +73,17 @@ namespace TowerDefense.Server
 
         public async Task CreateEnemy(string enemyType, bool aoeResistance)
         {
-            var creator = new LevelCreator();
-            AbstractFactory unitFactory = creator.FactoryMethod(_gameSession.CurrentGameLevel).GetAbstractFactory();
 
-            var enemy = unitFactory.CreateEnemy(enemyType);
-            enemy.SetUnitStrategy(new Walk(), enemy);
+            //var creator = new LevelCreator();
+            //AbstractFactory unitFactory = creator.FactoryMethod(_gameSession.CurrentGameLevel).GetAbstractFactory();
+
+            //var enemy = unitFactory.CreateEnemy(enemyType);
+            //enemy.SetUnitStrategy(new Walk(), enemy);
 
             var player = _gameSession.GetSessionPlayers().Where(p => p.ConnectionId == Context.ConnectionId).SingleOrDefault();
             var receiver = _gameSession.GetSessionPlayers().Where(p => p.ConnectionId != Context.ConnectionId).SingleOrDefault();
 
-            player.Subject.Attach(enemy);
-            receiver.Enemies.AddEnemy(enemy as Enemy);
+            var enemy = _enemyService.CreateEnemy(_gameSession, enemyType, player, receiver);
 
             await Clients.Caller.SendAsync("EnemyCreated", enemy, player, Context.ConnectionId);
             await Clients.Others.SendAsync("EnemyCreated", enemy, receiver, Context.ConnectionId);

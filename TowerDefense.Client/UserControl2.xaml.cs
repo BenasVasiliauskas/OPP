@@ -104,11 +104,8 @@ namespace TowerDefense.Client
                 _towers.ForEach(t => 
                 {
                     _enteredEnemyRects.Add(new List<Rectangle>());
-                });
-
-                _towers.ForEach(t =>
-                {
                     _enteredEnemies.Add(new List<Unit>());
+
                 });
 
                 for (int i = 0; i < _myRectangles.Count; i++)
@@ -119,6 +116,7 @@ namespace TowerDefense.Client
                     if (x == 320 && y == 320)
                     {
                         await _connection.InvokeAsync("EnemySurvived", enemies.GetEnemy(i), i);
+                        return;
                     }
 
                     for (int j = 0; j < _towers.Count; j++)
@@ -141,36 +139,38 @@ namespace TowerDefense.Client
                         }
                     }
                 }
-                    for (int j = 0; j < _towers.Count; j++)
+                for (int j = 0; j < _towers.Count; j++)
+                {
+                    if (_enteredEnemyRects[j].Count > 0)
                     {
-                        if (_enteredEnemyRects[j].Count > 0)
+                        Line l = new()
                         {
-                            Line l = new Line();
-                            l.Stroke = new SolidColorBrush(Colors.Red);
-                            l.StrokeThickness = 2.0;
-                            l.StrokeDashArray = new DoubleCollection(new[] { 5.0 });
+                            Stroke = new SolidColorBrush(Colors.Red),
+                            StrokeThickness = 2.0,
+                            StrokeDashArray = new DoubleCollection(new[] { 5.0 })
+                        };
 
-                            if (towers[j].isFirstStyle)
-                            {
-                                towers[j]._shootingStyle = new FirstEnteredRangeShootingStyle();
-                            }
-                            else
-                            {
-                                towers[j]._shootingStyle = new HighestEnteredEnemyHealthShootingStyle();
-                            }
-
-                            //var enemyToShootIndex = towers[j]._shootingStyle.GetEnemyToShoot(player, j);
-
-                            //l.X1 = Canvas.GetLeft(_enteredEnemyRects[j][enemyToShootIndex]) + _enteredEnemyRects[j][enemyToShootIndex].Width / 2;
-                            //l.X2 = Canvas.GetLeft(_towers[j]) + _towers[j].Width / 2;
-                            //l.Y1 = Canvas.GetTop(_enteredEnemyRects[j][enemyToShootIndex]) + _enteredEnemyRects[j][enemyToShootIndex].Height / 2;
-                            //l.Y2 = Canvas.GetTop(_towers[j]) + _towers[j].Height / 2;
-                            //canvas.Children.Add(l);
-                            //await _connection.InvokeAsync("DrawBulletForEnemy", l.X1, l.X2, l.Y1, l.Y2);
-
-                            //await _connection.InvokeAsync("NearTower", _myRectangles.IndexOf(_enteredEnemyRects[j][enemyToShootIndex]), j, _connection.ConnectionId);
+                        if (towers[j].isFirstStyle)
+                        {
+                            towers[j]._shootingStyle = new FirstEnteredRangeShootingStyle();
                         }
+                        else
+                        {
+                            towers[j]._shootingStyle = new HighestEnteredEnemyHealthShootingStyle();
+                        }
+
+                        //var enemyToShootIndex = towers[j]._shootingStyle.GetEnemyToShoot(player, j);
+
+                        //l.X1 = Canvas.GetLeft(_enteredEnemyRects[j][enemyToShootIndex]) + _enteredEnemyRects[j][enemyToShootIndex].Width / 2;
+                        //l.X2 = Canvas.GetLeft(_towers[j]) + _towers[j].Width / 2;
+                        //l.Y1 = Canvas.GetTop(_enteredEnemyRects[j][enemyToShootIndex]) + _enteredEnemyRects[j][enemyToShootIndex].Height / 2;
+                        //l.Y2 = Canvas.GetTop(_towers[j]) + _towers[j].Height / 2;
+                        //canvas.Children.Add(l);
+                        //await _connection.InvokeAsync("DrawBulletForEnemy", l.X1, l.X2, l.Y1, l.Y2);
+
+                        //await _connection.InvokeAsync("NearTower", _myRectangles.IndexOf(_enteredEnemyRects[j][enemyToShootIndex]), j, _connection.ConnectionId);
                     }
+                }
                     
             });
 
