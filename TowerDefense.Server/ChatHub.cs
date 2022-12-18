@@ -92,7 +92,6 @@ namespace TowerDefense.Server
             var receiver = _gameSession.GetSessionPlayers().Where(p => p.ConnectionId != Context.ConnectionId).SingleOrDefault();
 
             var enemy = _enemyService.CreateEnemy(_gameSession, enemyType, player, receiver);
-            //enemy.Act();
 
             await Clients.Caller.SendAsync("EnemyCreated", enemy, player, Context.ConnectionId);
             await Clients.Others.SendAsync("EnemyCreated", enemy, receiver, Context.ConnectionId);

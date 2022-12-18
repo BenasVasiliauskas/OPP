@@ -141,6 +141,7 @@ namespace TowerDefense.Client
                             _enteredEnemyRects[j].Add(_myRectangles[i]);
                             _enteredEnemies[j].Add(enemies.GetEnemy(i));
                             player.Towers[j].EnemiesInRange.Add(enemies.GetEnemy(i));
+                            enemies.GetEnemy(i).GiveStatement();
                         }
                         else
                         {

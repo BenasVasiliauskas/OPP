@@ -1,5 +1,6 @@
 ﻿using TowerDefense.Server.Models.Bridge;
 using TowerDefense.Server.Models.Enemies;
+using TowerDefense.Server.Models.Strategies;
 using TowerDefense.Server.Models.Visitor;
 
 namespace TowerDefense.Server.Models.Towers
@@ -20,7 +21,7 @@ namespace TowerDefense.Server.Models.Towers
 
         public void VisitEnemy(Enemy enemy)
         {
-            enemy.SetUnitStrategy(new SlowWalk(), enemy);
+            enemy.Transition(new FirstState());
         }
     }
 }

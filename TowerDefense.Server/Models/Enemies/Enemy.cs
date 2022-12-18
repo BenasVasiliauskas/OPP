@@ -1,14 +1,31 @@
-﻿namespace TowerDefense.Server.Models.Enemies
+﻿using TowerDefense.Server.Models.Strategies;
+using TowerDefense.Server.Models.Visitor;
+
+namespace TowerDefense.Server.Models.Enemies
 {
     public class Enemy : Unit, IPrototype, IUnitTemplate
     {
         public int MaxHealth { get; set; }
         public bool HasDead { get; set; }
+        private State _state = null;
 
         public Enemy()
         {
             Speed = 3;
+            Transition(new FirstState());
         }
+
+        public void Transition(State state)
+        {
+            this._state = state;
+            this._state.SetUnit(this);
+        }
+
+        public void GiveStatement()
+        {
+            this._state.Statement();
+        }
+
 
         public Enemy MakeDeepCopy()
         {
