@@ -37,10 +37,8 @@ namespace TowerDefense.Client
         private List<(DoubleAnimationUsingPath, DoubleAnimationUsingPath)> _animations = new();
         private List<Storyboard> _myStoryboards = new();
         private List<Storyboard> _enemyStoryboards = new();
-        private bool _nextEnemyAoeResistant = false;
-        private List<List<Enemy>> _enteredEnemies = new();
+        private List<List<Unit>> _enteredEnemies = new();
         private List<List<Rectangle>> _enteredEnemyRects = new();
-        private List<int> _survivedEnemies = new();
 
         DispatcherTimer gameTimer = new();
 
@@ -103,12 +101,11 @@ namespace TowerDefense.Client
 
                 _enteredEnemyRects = new();
                 _enteredEnemies = new();
-                _survivedEnemies = new();
 
                 _towers.ForEach(t => 
                 {
                     _enteredEnemyRects.Add(new List<Rectangle>());
-                    _enteredEnemies.Add(new List<Enemy>());
+                    _enteredEnemies.Add(new List<Unit>());
 
                 });
 
@@ -139,9 +136,8 @@ namespace TowerDefense.Client
                         {
                             //await _connection.InvokeAsync("Pause", i);
                             _enteredEnemyRects[j].Add(_myRectangles[i]);
-                            _enteredEnemies[j].Add(enemies.GetEnemy(i));
-                            player.Towers[j].EnemiesInRange.Add(enemies.GetEnemy(i));
-                            enemies.GetEnemy(i).GiveStatement();
+                            _enteredEnemies[j].Add(player.Enemies.GetEnemy(i));
+                            player.Towers[j].EnemiesInRange.Add(player.Enemies.GetEnemy(i));
                         }
                         else
                         {
@@ -183,7 +179,7 @@ namespace TowerDefense.Client
                             await _connection.InvokeAsync("NearTower", _myRectangles.IndexOf(_enteredEnemyRects[j][enemyToShootIndex]), j, _connection.ConnectionId);
                         }
                     }
-                }                       
+                }
             });
 
             _connection.On<int, string>("EnemyDeath", (index, connectionId) =>
@@ -192,12 +188,23 @@ namespace TowerDefense.Client
                 _enemyRectangles.RemoveAt(index);
             });
 
-            _connection.On<double, double, double, double>("DrawBullet", (x1, x2, y1, y2) =>
+
+            _connection.On<int, string>("EnemyKilled", (index, connectionId) =>
             {
-                //foreach (var item in enemyCanvas.Children.OfType<Line>())
-                //{
-                //    enemyCanvas.Children.Remove(item);
-                //}
+                if(_connection.ConnectionId == connectionId)
+                {
+                    canvas.Children.Remove(_myRectangles[index]);
+                    _myRectangles.RemoveAt(index);
+                }
+                else
+                {
+                    enemyCanvas.Children.Remove(_enemyRectangles[index]);
+                    _enemyRectangles.RemoveAt(index);
+                }
+            });
+
+            _connection.On<double, double, double, double>("DrawBullet", async (x1, x2, y1, y2) =>
+            {
 
                 Line l = new Line();
                 l.Stroke = new SolidColorBrush(Colors.Green);
@@ -210,6 +217,11 @@ namespace TowerDefense.Client
                 l.Y2 = y2;
 
                 enemyCanvas.Children.Add(l);
+                await Task.Delay(10);
+                foreach (var item in enemyCanvas.Children.OfType<Line>())
+                {
+                    enemyCanvas.Children.Remove(item);
+                }
             });
 
             _connection.On<Unit, Player, string>("EnemyCreated", (unit, player, contextId) =>
@@ -346,7 +358,7 @@ namespace TowerDefense.Client
                 player_money.Content = player.Money;
             });
 
-            _connection.On<Player>("Paused", async (player) =>
+            _connection.On<Player>("Paused", (player) =>
             {
                 for (int k = 0; k < player.Enemies.EnemyCount(); k++)
                 {
@@ -356,7 +368,7 @@ namespace TowerDefense.Client
                 }
             });
 
-            _connection.On<Player>("Unpaused", async (player) =>
+            _connection.On<Player>("Unpaused", (player) =>
             {
                 for (int k = 0; k < player.Enemies.EnemyCount(); k++)
                 {
@@ -417,11 +429,6 @@ namespace TowerDefense.Client
         private async void PowerUp_Click(object sender, RoutedEventArgs e)
         {
             await _connection.InvokeAsync("PowerUp");
-        }
-
-        private void aoe_resistance_button_Click(object sender, RoutedEventArgs e)
-        {
-            _nextEnemyAoeResistant = true;
         }
 
         private async void DoubleUp_Click(object sender, RoutedEventArgs e)

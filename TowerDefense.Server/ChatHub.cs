@@ -81,13 +81,6 @@ namespace TowerDefense.Server
 
         public async Task CreateEnemy(string enemyType)
         {
-
-            //var creator = new LevelCreator();
-            //AbstractFactory unitFactory = creator.FactoryMethod(_gameSession.CurrentGameLevel).GetAbstractFactory();
-
-            //var enemy = unitFactory.CreateEnemy(enemyType);
-            //enemy.SetUnitStrategy(new Walk(), enemy);
-
             var player = _gameSession.GetSessionPlayers().Where(p => p.ConnectionId == Context.ConnectionId).SingleOrDefault();
             var receiver = _gameSession.GetSessionPlayers().Where(p => p.ConnectionId != Context.ConnectionId).SingleOrDefault();
 
@@ -142,7 +135,7 @@ namespace TowerDefense.Server
                 if (player.Enemies.GetEnemy(enemyIndex).Health <= 0)
                 {
                     player.Enemies.RemoveEnemyAt(enemyIndex);
-                    await Clients.All.SendAsync("EnemyDeath", enemyIndex, player.ConnectionId);
+                    await Clients.All.SendAsync("EnemyKilled", enemyIndex, player.ConnectionId);
                 }
             }
         }

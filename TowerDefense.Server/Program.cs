@@ -4,7 +4,7 @@ using TowerDefense.Server.Models.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSignalR().AddNewtonsoftJsonProtocol();
+builder.Services.AddSignalR();
 builder.Services.AddSingleton<EnemyService>();
 builder.Services.AddSingleton<PlayerStateCaretaker>();
 //builder.Services.AddSingleton<PlayerStateMemento>();
