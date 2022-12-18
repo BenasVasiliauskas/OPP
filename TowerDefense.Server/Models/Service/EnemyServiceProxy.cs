@@ -18,6 +18,8 @@ namespace TowerDefense.Server.Models.Service
         {
             if (_cachedEnemies.Any() && session.CurrentGameLevel == _currentLevel && _cachedEnemies.ContainsKey(enemyType))
             {
+                receiver.Enemies.AddEnemy(_cachedEnemies[enemyType]);
+
                 return _cachedEnemies[enemyType];
             }
 

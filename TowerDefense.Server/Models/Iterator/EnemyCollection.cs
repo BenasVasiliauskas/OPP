@@ -14,6 +14,11 @@ namespace TowerDefense.Server.Models.Iterator
 
         public Enemy GetEnemy(int index)
         {
+            if(index < 0 || index >= Collection.Count)
+            {
+                return null;
+            }
+
             return Collection[index];
         }
 

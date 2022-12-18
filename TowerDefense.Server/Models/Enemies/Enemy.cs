@@ -1,4 +1,6 @@
-﻿namespace TowerDefense.Server.Models.Enemies
+﻿using TowerDefense.Server.Models.Visitor;
+
+namespace TowerDefense.Server.Models.Enemies
 {
     public class Enemy : Unit, IPrototype
     {
@@ -20,6 +22,11 @@
         public override void Update()
         {
             Speed = Speed * 2;
+        }
+
+        public void Accept(IVisitor visitor)
+        {
+            visitor.VisitEnemy(this);
         }
     }
 }
