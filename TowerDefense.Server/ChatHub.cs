@@ -4,6 +4,7 @@ using TowerDefense.Server.Models;
 using TowerDefense.Server.Models.Enemies;
 using TowerDefense.Server.Models.Iterator;
 using TowerDefense.Server.Models.Levels;
+using TowerDefense.Server.Models.Memento;
 using TowerDefense.Server.Models.Powerups;
 using TowerDefense.Server.Models.Service;
 using TowerDefense.Server.Models.Towers;
@@ -14,10 +15,12 @@ namespace TowerDefense.Server
     {
         private readonly GameSession _gameSession = GameSession.GetIstance();
         private readonly IEnemyService _enemyService;
+        private readonly PlayerStateCaretaker _playerStateCaretaker;
 
-        public ChatHub(IEnemyService enemyService)
+        public ChatHub(IEnemyService enemyService, PlayerStateCaretaker playerStateCaretaker)
         {
             _enemyService = enemyService;
+            _playerStateCaretaker = playerStateCaretaker;
         }
 
         public async Task SendMessage(string message)
@@ -65,7 +68,10 @@ namespace TowerDefense.Server
             var player = _gameSession.GetSessionPlayers().Where(p => p.ConnectionId == Context.ConnectionId).SingleOrDefault();
             var receiver = _gameSession.GetSessionPlayers().Where(p => p.ConnectionId != Context.ConnectionId).SingleOrDefault();
 
+            _playerStateCaretaker.MakeBackup(player);
+
             player.Towers.Add(test);
+            player.Money += 10;
 
             await Clients.Caller.SendAsync("TowerBuilt", tower, receiver, Context.ConnectionId, x, y);
             await Clients.Others.SendAsync("TowerBuilt", tower, player, Context.ConnectionId, x, y);
@@ -235,6 +241,17 @@ namespace TowerDefense.Server
 
 
             await Clients.All.SendAsync("Unpaused", player);
+        }
+
+        public async Task UndoTower()
+        {
+            var memento = _playerStateCaretaker.Undo();
+
+            var player = _gameSession.GetSessionPlayers()
+                .Where(p => p.ConnectionId == Context.ConnectionId)
+                .SingleOrDefault();
+
+            player.Restore(memento);
         }
     }
 }

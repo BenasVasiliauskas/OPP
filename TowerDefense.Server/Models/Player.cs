@@ -1,5 +1,6 @@
 ﻿using TowerDefense.Server.Models.Enemies;
 using TowerDefense.Server.Models.Iterator;
+using TowerDefense.Server.Models.Memento;
 using TowerDefense.Server.Models.Towers;
 using TowerDefense.Server.Observers;
 
@@ -13,5 +14,16 @@ namespace TowerDefense.Server.Models
         public List<Tower> Towers { get; set; } = new();
         public Subject Subject { get; set; } = new();
         public int Money { get; set; }
+
+        public PlayerStateMemento CreateSnapshot()
+        {
+            return new PlayerStateMemento(Towers, Money);
+        }
+
+        public void Restore(PlayerStateMemento state)
+        {
+            Towers = state.Towers;
+            Money = state.Money;
+        }
     }
 }

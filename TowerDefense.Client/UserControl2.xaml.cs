@@ -468,5 +468,10 @@ namespace TowerDefense.Client
                 await expression.Interpret(context);
             }
         }
+
+        private async void UndoButton_Click(object sender, RoutedEventArgs e)
+        {
+            await _connection.InvokeAsync("UndoTower");
+        }
     }
 }
