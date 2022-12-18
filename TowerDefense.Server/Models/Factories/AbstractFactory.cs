@@ -1,4 +1,5 @@
-﻿using TowerDefense.Server.Models.Towers;
+﻿using TowerDefense.Server.Models.Strategies;
+using TowerDefense.Server.Models.Towers;
 
 namespace TowerDefense.Server.Models
 {

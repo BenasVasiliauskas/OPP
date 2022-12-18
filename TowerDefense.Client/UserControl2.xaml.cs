@@ -14,8 +14,10 @@ using System.Windows.Threading;
 using TowerDefense.Client.Interpreter;
 using TowerDefense.Server.Models;
 using TowerDefense.Server.Models.Bridge;
+using TowerDefense.Server.Models.Enemies;
 using TowerDefense.Server.Models.Iterator;
 using TowerDefense.Server.Models.Maps;
+using TowerDefense.Server.Models.Strategies;
 using TowerDefense.Server.Models.Towers;
 
 namespace TowerDefense.Client
@@ -36,7 +38,7 @@ namespace TowerDefense.Client
         private List<Storyboard> _myStoryboards = new();
         private List<Storyboard> _enemyStoryboards = new();
         private bool _nextEnemyAoeResistant = false;
-        private List<List<Unit>> _enteredEnemies = new();
+        private List<List<Enemy>> _enteredEnemies = new();
         private List<List<Rectangle>> _enteredEnemyRects = new();
         private List<int> _survivedEnemies = new();
 
@@ -106,7 +108,7 @@ namespace TowerDefense.Client
                 _towers.ForEach(t => 
                 {
                     _enteredEnemyRects.Add(new List<Rectangle>());
-                    _enteredEnemies.Add(new List<Unit>());
+                    _enteredEnemies.Add(new List<Enemy>());
 
                 });
 

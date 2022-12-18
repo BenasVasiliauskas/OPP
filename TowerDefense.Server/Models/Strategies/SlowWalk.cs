@@ -1,8 +1,8 @@
 ﻿namespace TowerDefense.Server.Models
 {
-    public class SlowWalk : UnitStrategy
+    public class SlowWalk
     {
-        public override void Act(Unit unit)
+        public void Act(Unit unit)
         {
             unit.SpeedRatio = 0.2;
         }

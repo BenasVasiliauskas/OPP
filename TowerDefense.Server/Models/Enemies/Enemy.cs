@@ -1,9 +1,16 @@
-﻿namespace TowerDefense.Server.Models.Enemies
+﻿using TowerDefense.Server.Models.Strategies;
+
+namespace TowerDefense.Server.Models.Enemies
 {
-    public class Enemy : Unit, IPrototype
+    public class Enemy : Unit, IPrototype, IUnitTemplate
     {
         public int MaxHealth { get; set; }
         public bool HasDead { get; set; }
+
+        public Enemy()
+        {
+            Speed = 3;
+        }
 
         public Enemy MakeDeepCopy()
         {
@@ -20,6 +27,16 @@
         public override void Update()
         {
             Speed = Speed * 2;
+        }
+
+        public void Orient()
+        {
+            Console.WriteLine("Enemy: Orienting");
+        }
+
+        public void Do()
+        {
+            Console.WriteLine("Enemy: Doing");
         }
     }
 }

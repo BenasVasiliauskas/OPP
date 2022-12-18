@@ -1,6 +1,7 @@
 ﻿using TowerDefense.Server.Models.Bridge;
 using TowerDefense.Server.Models.Enemies;
 using TowerDefense.Server.Models.Maps;
+using TowerDefense.Server.Models.Strategies;
 using TowerDefense.Server.Models.Towers;
 
 namespace TowerDefense.Server.Models

@@ -8,6 +8,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using TowerDefense.Server.Models;
 using TowerDefense.Server.Models.Maps;
+using TowerDefense.Server.Models.Strategies;
 
 namespace TowerDefense.Client
 {

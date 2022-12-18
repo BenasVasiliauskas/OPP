@@ -7,6 +7,7 @@ using TowerDefense.Server.Models.Levels;
 using TowerDefense.Server.Models.Memento;
 using TowerDefense.Server.Models.Powerups;
 using TowerDefense.Server.Models.Service;
+using TowerDefense.Server.Models.Strategies;
 using TowerDefense.Server.Models.Towers;
 
 namespace TowerDefense.Server
@@ -61,6 +62,7 @@ namespace TowerDefense.Server
             AbstractFactory unitFactory = creator.FactoryMethod(_gameSession.CurrentGameLevel).GetAbstractFactory();
 
             Unit tower = unitFactory.CreateTower(towerType);
+            tower.Act();
 
             var test = tower as Tower;
             test._shootingStyle = null;
@@ -90,6 +92,7 @@ namespace TowerDefense.Server
             var receiver = _gameSession.GetSessionPlayers().Where(p => p.ConnectionId != Context.ConnectionId).SingleOrDefault();
 
             var enemy = _enemyService.CreateEnemy(_gameSession, enemyType, player, receiver);
+            //enemy.Act();
 
             await Clients.Caller.SendAsync("EnemyCreated", enemy, player, Context.ConnectionId);
             await Clients.Others.SendAsync("EnemyCreated", enemy, receiver, Context.ConnectionId);
@@ -225,9 +228,6 @@ namespace TowerDefense.Server
                 .Where(p => p.ConnectionId == Context.ConnectionId)
                 .SingleOrDefault();
 
-            player.Enemies.GetEnemy(index).SetUnitStrategy(new SlowWalk(), player.Enemies.GetEnemy(index));
-
-
             await Clients.All.SendAsync("Paused", player);
         }
 
@@ -236,9 +236,6 @@ namespace TowerDefense.Server
             var player = _gameSession.GetSessionPlayers()
                 .Where(p => p.ConnectionId == Context.ConnectionId)
                 .SingleOrDefault();
-
-            player.Enemies.GetEnemy(index).SetUnitStrategy(new Walk(), player.Enemies.GetEnemy(index));
-
 
             await Clients.All.SendAsync("Unpaused", player);
         }
