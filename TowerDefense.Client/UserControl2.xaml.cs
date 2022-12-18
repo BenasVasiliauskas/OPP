@@ -119,8 +119,13 @@ namespace TowerDefense.Client
 
                     if (x == 320 && y == 320)
                     {
-                        await _connection.InvokeAsync("EnemySurvived", enemies.GetEnemy(i), i);
-                        return;
+                        if(player.Enemies.GetEnemy(i) != null)
+                        {
+                            canvas.Children.Remove(_myRectangles[i]);
+                            _myRectangles.RemoveAt(i);
+                            await _connection.InvokeAsync("EnemySurvived", player.Enemies.GetEnemy(i), i);
+                            return;
+                        }
                     }
 
                     for (int j = 0; j < _towers.Count; j++)
@@ -177,41 +182,13 @@ namespace TowerDefense.Client
                             await _connection.InvokeAsync("NearTower", _myRectangles.IndexOf(_enteredEnemyRects[j][enemyToShootIndex]), j, _connection.ConnectionId);
                         }
                     }
-                }             
-                    
+                }                       
             });
 
             _connection.On<int, string>("EnemyDeath", (index, connectionId) =>
             {
-                if(_connection.ConnectionId == connectionId)
-                {
-                    canvas.Children.Remove(_myRectangles[index]);
-                    _myRectangles.RemoveAt(index);
-                    //_enteredEnemyRects.RemoveAt(0);
-                    //_enteredEnemies.RemoveAt(0);
-                    //player.Towers[0].EnemiesInRange.Remove(enemies[0]);
-                }
-                else
-                {
-                    enemyCanvas.Children.Remove(_enemyRectangles[index]);
-                    _enemyRectangles.RemoveAt(index);
-                    //_enteredEnemyRects.RemoveAt(0);
-                    //_enteredEnemies.RemoveAt(0);
-                }
-            });
-
-            _connection.On<int, string>("EnemySurvived", (index, connectionId) =>
-            {
-                if (_connection.ConnectionId == connectionId)
-                {
-                    canvas.Children.Remove(_myRectangles[index]);
-                    _myRectangles.RemoveAt(index);
-                }
-                else
-                {
-                    enemyCanvas.Children.Remove(_enemyRectangles[index]);
-                    _enemyRectangles.RemoveAt(index);
-                }
+                enemyCanvas.Children.Remove(_enemyRectangles[index]);
+                _enemyRectangles.RemoveAt(index);
             });
 
             _connection.On<double, double, double, double>("DrawBullet", (x1, x2, y1, y2) =>

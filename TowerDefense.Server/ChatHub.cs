@@ -159,13 +159,9 @@ namespace TowerDefense.Server
                 .Where(p => p.ConnectionId == Context.ConnectionId)
                 .SingleOrDefault();
 
-            var receiver = _gameSession.GetSessionPlayers()
-                .Where(p => p.ConnectionId != Context.ConnectionId)
-                .SingleOrDefault();
+            player.Enemies.RemoveEnemyAt(index);
 
-            player.Enemies.RemoveEnemy(enemy);
-
-            await Clients.All.SendAsync("EnemyDeath", index, player.ConnectionId);
+            await Clients.Others.SendAsync("EnemyDeath", index, player.ConnectionId);
         }
 
         public async Task DoubleUpEnemies()
