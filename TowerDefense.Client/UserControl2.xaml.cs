@@ -31,6 +31,7 @@ namespace TowerDefense.Client
         private List<Rectangle> _myRectangles = new();
         private List<Rectangle> _enemyRectangles = new();
         private List<Rectangle> _towers = new();
+        private List<Rectangle> _enemyTowers = new();
         private List<(DoubleAnimationUsingPath, DoubleAnimationUsingPath)> _animations = new();
         private List<Storyboard> _myStoryboards = new();
         private List<Storyboard> _enemyStoryboards = new();
@@ -341,6 +342,7 @@ namespace TowerDefense.Client
 
                 if (player.ConnectionId == contextId)
                 {
+                    _enemyTowers.Add(tower);
                     enemyCanvas.Children.Add(tower);
                 }
                 else
@@ -390,13 +392,13 @@ namespace TowerDefense.Client
                 if (_connection.ConnectionId == player.ConnectionId)
                 {
                     canvas.Children.Remove(_towers[^1]);
+                    _towers.RemoveAt(_towers.Count - 1);
                 }
                 else
                 {
-                    enemyCanvas.Children.Remove(_towers[^1]);
+                    enemyCanvas.Children.Remove(_enemyTowers[^1]);
+                    _enemyTowers.RemoveAt(_enemyTowers.Count - 1);
                 }
-
-                _towers.RemoveAt(_towers.Count - 1);
             });
         }
         private async void Create_Shooting_Enemy_Button_Click(object sender, RoutedEventArgs e)
