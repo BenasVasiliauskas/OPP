@@ -133,7 +133,7 @@ namespace TowerDefense.Server
                 if (player.Enemies.GetEnemy(enemyIndex).Health <= 0)
                 {
                     player.Enemies.RemoveEnemyAt(enemyIndex);
-                    await Clients.All.SendAsync("EnemyDeath", enemyIndex, player.ConnectionId);
+                    await Clients.All.SendAsync("EnemyKilled", enemyIndex, player.ConnectionId);
                 }
             }
         }
