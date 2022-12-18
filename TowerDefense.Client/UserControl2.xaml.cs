@@ -105,7 +105,7 @@ namespace TowerDefense.Client
                 _towers.ForEach(t => 
                 {
                     _enteredEnemyRects.Add(new List<Rectangle>());
-                    _enteredEnemies.Add(new List<Enemy>());
+                    _enteredEnemies.Add(new List<Unit>());
 
                 });
 
@@ -358,7 +358,7 @@ namespace TowerDefense.Client
                 player_money.Content = player.Money;
             });
 
-            _connection.On<Player>("Paused", async (player) =>
+            _connection.On<Player>("Paused", (player) =>
             {
                 for (int k = 0; k < player.Enemies.EnemyCount(); k++)
                 {
@@ -368,7 +368,7 @@ namespace TowerDefense.Client
                 }
             });
 
-            _connection.On<Player>("Unpaused", async (player) =>
+            _connection.On<Player>("Unpaused", (player) =>
             {
                 for (int k = 0; k < player.Enemies.EnemyCount(); k++)
                 {
