@@ -1,9 +1,10 @@
-﻿using TowerDefense.Server.Models.Strategies;
+﻿using TowerDefense.Server.Models.Composite;
+using TowerDefense.Server.Models.Strategies;
 using TowerDefense.Server.Models.Visitor;
 
 namespace TowerDefense.Server.Models.Enemies
 {
-    public class Enemy : Unit, IPrototype, IUnitTemplate
+    public class Enemy : Unit, IPrototype, IUnitTemplate, IComponent
     {
         public int MaxHealth { get; set; }
         public bool HasDead { get; set; }
@@ -38,7 +39,7 @@ namespace TowerDefense.Server.Models.Enemies
         {
             return (Enemy)MemberwiseClone();
         }
-
+        
         public override void Update()
         {
             Speed = Speed * 2;
@@ -58,5 +59,6 @@ namespace TowerDefense.Server.Models.Enemies
         {
             Console.WriteLine("Enemy: Doing");
         }
+
     }
 }
