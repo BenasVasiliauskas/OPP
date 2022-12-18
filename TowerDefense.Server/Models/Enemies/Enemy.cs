@@ -1,11 +1,31 @@
-﻿using TowerDefense.Server.Models.Visitor;
+﻿using TowerDefense.Server.Models.Strategies;
+using TowerDefense.Server.Models.Visitor;
 
 namespace TowerDefense.Server.Models.Enemies
 {
-    public class Enemy : Unit, IPrototype
+    public class Enemy : Unit, IPrototype, IUnitTemplate
     {
         public int MaxHealth { get; set; }
         public bool HasDead { get; set; }
+        private State _state = null;
+
+        public Enemy()
+        {
+            Speed = 3;
+            Transition(new FirstState());
+        }
+
+        public void Transition(State state)
+        {
+            this._state = state;
+            this._state.SetUnit(this);
+        }
+
+        public void GiveStatement()
+        {
+            this._state.Statement();
+        }
+
 
         public Enemy MakeDeepCopy()
         {
@@ -27,6 +47,16 @@ namespace TowerDefense.Server.Models.Enemies
         public void Accept(IVisitor visitor)
         {
             visitor.VisitEnemy(this);
+        }
+
+        public void Orient()
+        {
+            Console.WriteLine("Enemy: Orienting");
+        }
+
+        public void Do()
+        {
+            Console.WriteLine("Enemy: Doing");
         }
     }
 }

@@ -17,8 +17,7 @@ namespace TowerDefense.Server.Models.Service
             var creator = new LevelCreator();
             AbstractFactory unitFactory = creator.FactoryMethod(session.CurrentGameLevel).GetAbstractFactory();
 
-            var enemy = unitFactory.CreateEnemy(enemyType);
-            enemy.SetUnitStrategy(new Walk(), enemy);      
+            Enemy enemy = (Enemy)unitFactory.CreateEnemy(enemyType);
 
             player.Subject.Attach(enemy);
             receiver.Enemies.AddEnemy(enemy as Enemy);

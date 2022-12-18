@@ -1,8 +1,9 @@
-﻿using TowerDefense.Server.Observers;
+﻿using TowerDefense.Server.Models.Strategies;
+using TowerDefense.Server.Observers;
 
 namespace TowerDefense.Server.Models
 {
-    public class Unit : Observer
+    public class Unit : Observer, IUnitTemplate
     {
         public Guid Id { get; set; } = Guid.NewGuid();
         public double X { get; set; }
@@ -10,14 +11,18 @@ namespace TowerDefense.Server.Models
         public int Damage { get; set; }
         public double Speed { get; set; }
         public double SpeedRatio { get; set; }
-        public UnitStrategy UnitStrategy { get; private set; }
         public string ImageSource { get; set; }
         public int Health { get; set; }
         public List<Unit> EnemiesInRange { get; set; } = new();
-        public void SetUnitStrategy(UnitStrategy UnitStrategy, Unit unit)
+
+        public void Do() { }
+
+        public void Orient() { }
+
+        public void Act()
         {
-            this.UnitStrategy = UnitStrategy;
-            this.UnitStrategy.Act(unit);
+            Orient();
+            Do();
         }
 
         public override void Update()
@@ -25,10 +30,11 @@ namespace TowerDefense.Server.Models
             
         }
 
+
+
         //public override bool Equals(object obj)
         //{
         //    var unit = obj as Unit;
-
         //    return unit.Id == Id;
         //}
         //public override int GetHashCode()

@@ -1,8 +1,9 @@
 ﻿using TowerDefense.Server.Models.Bridge;
+using TowerDefense.Server.Models.Strategies;
 
 namespace TowerDefense.Server.Models.Towers
 {
-    public class Tower : Unit
+    public class Tower : Unit, IUnitTemplate
     {
         public IShootingStyle _shootingStyle;
         public bool isFirstStyle { get; set; }
@@ -11,14 +12,21 @@ namespace TowerDefense.Server.Models.Towers
         {
             _shootingStyle = shootingStyle;
         }
-        public Tower()
-        {
-
-        }
+        public Tower() { }
 
         public override void Update()
         {
             Damage *= 2;
+        }
+
+        public void Orient()
+        {
+            Console.WriteLine("Tower: Orienting");
+        }
+
+        public void Do()
+        {
+            Console.WriteLine("Tower: Doing");
         }
     }
 }

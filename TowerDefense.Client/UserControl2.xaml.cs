@@ -14,8 +14,10 @@ using System.Windows.Threading;
 using TowerDefense.Client.Interpreter;
 using TowerDefense.Server.Models;
 using TowerDefense.Server.Models.Bridge;
+using TowerDefense.Server.Models.Enemies;
 using TowerDefense.Server.Models.Iterator;
 using TowerDefense.Server.Models.Maps;
+using TowerDefense.Server.Models.Strategies;
 using TowerDefense.Server.Models.Towers;
 
 namespace TowerDefense.Client
@@ -103,7 +105,7 @@ namespace TowerDefense.Client
                 _towers.ForEach(t => 
                 {
                     _enteredEnemyRects.Add(new List<Rectangle>());
-                    _enteredEnemies.Add(new List<Unit>());
+                    _enteredEnemies.Add(new List<Enemy>());
 
                 });
 

@@ -1,5 +1,6 @@
 ﻿using TowerDefense.Server.Models.Levels;
 using TowerDefense.Server.Models.Maps;
+using TowerDefense.Server.Models.Strategies;
 
 namespace TowerDefense.Server.Models
 {
