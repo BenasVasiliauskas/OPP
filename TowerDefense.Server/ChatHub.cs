@@ -71,7 +71,7 @@ namespace TowerDefense.Server
             await Clients.Others.SendAsync("TowerBuilt", tower, player, Context.ConnectionId, x, y);
         }
 
-        public async Task CreateEnemy(string enemyType, bool aoeResistance)
+        public async Task CreateEnemy(string enemyType)
         {
 
             //var creator = new LevelCreator();

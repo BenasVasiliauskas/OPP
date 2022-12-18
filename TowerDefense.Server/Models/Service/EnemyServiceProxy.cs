@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TowerDefense.Server.Models.Enemies;
+﻿using TowerDefense.Server.Models.Enemies;
 
 namespace TowerDefense.Server.Models.Service
 {

@@ -11,6 +11,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using TowerDefense.Client.Interpreter;
 using TowerDefense.Server.Models;
 using TowerDefense.Server.Models.Bridge;
 using TowerDefense.Server.Models.Iterator;
@@ -449,6 +450,23 @@ namespace TowerDefense.Client
         private async Task delayedWork()
         {
             await Task.Delay(2000);
+        }
+
+        private async void SubmitCommand_Click(object sender, RoutedEventArgs e)
+        {
+            var context = new GameContext(_connection);
+            context.Input = CommandBox.Text;
+
+            var expressionTree = new List<Interpreter.Expression>
+            {
+                new BuyHealingEnemyExpression(),
+                new BuyShootingEnemyExpression()
+            };
+
+            foreach (var expression in expressionTree)
+            {
+                await expression.Interpret(context);
+            }
         }
     }
 }

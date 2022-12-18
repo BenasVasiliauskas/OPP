@@ -52,6 +52,8 @@
                         <Label x:Name="player_money" Content="0" Canvas.Left="162" Canvas.Top="83"/>
                         <Button x:Name="DoubleUp" Content="Double up" Canvas.Left="295" Canvas.Top="40" Click="DoubleUp_Click"/>
                         <Button x:Name="Speed" Content="spyd" Canvas.Left="324" Canvas.Top="74" Click="Speed_Click"/>
+                        <TextBox x:Name="CommandBox" Canvas.Left="161" TextWrapping="Wrap" Canvas.Top="363" Width="192" HorizontalAlignment="Center" VerticalAlignment="Top" Height="29"/>
+                        <Button x:Name="SubmitCommand" Content="Submit" Canvas.Top="368" HorizontalAlignment="Left" VerticalAlignment="Center" Canvas.Left="23" Click="SubmitCommand_Click"/>
                     </Canvas>
                 </Grid>
             </UserControl>
