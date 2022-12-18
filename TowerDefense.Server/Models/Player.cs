@@ -17,7 +17,7 @@ namespace TowerDefense.Server.Models
 
         public PlayerStateMemento CreateSnapshot()
         {
-            return new PlayerStateMemento(Towers, Money);
+            return new PlayerStateMemento(new List<Tower>(Towers), Money);
         }
 
         public void Restore(PlayerStateMemento state)

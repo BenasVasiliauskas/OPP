@@ -117,8 +117,8 @@ namespace TowerDefense.Server
             var player = _gameSession.GetSessionPlayers().Where(p => p.ConnectionId == Context.ConnectionId).SingleOrDefault();
             var receiver = _gameSession.GetSessionPlayers().Where(p => p.ConnectionId != Context.ConnectionId).SingleOrDefault();
 
-            await Clients.Caller.SendAsync("Ticked", player.Enemies, player.Towers, null, Context.ConnectionId);
-            await Clients.Others.SendAsync("Ticked", receiver.Enemies, receiver.Towers, null, Context.ConnectionId);
+            await Clients.Caller.SendAsync("Ticked", player.Enemies, player.Towers, player, Context.ConnectionId);
+            await Clients.Others.SendAsync("Ticked", receiver.Enemies, receiver.Towers, receiver, Context.ConnectionId);
         }
 
         public void EnemyDied(int index)
@@ -252,6 +252,8 @@ namespace TowerDefense.Server
                 .SingleOrDefault();
 
             player.Restore(memento);
+
+            await Clients.All.SendAsync("UndidTower", player);
         }
     }
 }

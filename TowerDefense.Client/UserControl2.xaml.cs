@@ -129,49 +129,52 @@ namespace TowerDefense.Client
 
                         if (actualDistance < 64)
                         {
-                            await _connection.InvokeAsync("Pause", i);
+                            //await _connection.InvokeAsync("Pause", i);
                             _enteredEnemyRects[j].Add(_myRectangles[i]);
                             _enteredEnemies[j].Add(enemies.GetEnemy(i));
-                            //player.Towers[j].EnemiesInRange.Add(enemies[i]);
+                            player.Towers[j].EnemiesInRange.Add(enemies.GetEnemy(i));
                         }
                         else
                         {
-                            await _connection.InvokeAsync("Unpause", i);
+                            //await _connection.InvokeAsync("Unpause", i);
                         }
                     }
                 }
-                for (int j = 0; j < _towers.Count; j++)
+                if (player.ConnectionId == _connection.ConnectionId)
                 {
-                    if (_enteredEnemyRects[j].Count > 0)
+                    for (int j = 0; j < _towers.Count; j++)
                     {
-                        Line l = new()
+                        if (_enteredEnemyRects[j].Count > 0)
                         {
-                            Stroke = new SolidColorBrush(Colors.Red),
-                            StrokeThickness = 2.0,
-                            StrokeDashArray = new DoubleCollection(new[] { 5.0 })
-                        };
+                            Line l = new()
+                            {
+                                Stroke = new SolidColorBrush(Colors.Red),
+                                StrokeThickness = 2.0,
+                                StrokeDashArray = new DoubleCollection(new[] { 5.0 })
+                            };
 
-                        if (towers[j].isFirstStyle)
-                        {
-                            towers[j]._shootingStyle = new FirstEnteredRangeShootingStyle();
+                            if (towers[j].isFirstStyle)
+                            {
+                                towers[j]._shootingStyle = new FirstEnteredRangeShootingStyle();
+                            }
+                            else
+                            {
+                                towers[j]._shootingStyle = new HighestEnteredEnemyHealthShootingStyle();
+                            }
+
+                            var enemyToShootIndex = towers[j]._shootingStyle.GetEnemyToShoot(player, j);
+
+                            l.X1 = Canvas.GetLeft(_enteredEnemyRects[j][enemyToShootIndex]) + _enteredEnemyRects[j][enemyToShootIndex].Width / 2;
+                            l.X2 = Canvas.GetLeft(_towers[j]) + _towers[j].Width / 2;
+                            l.Y1 = Canvas.GetTop(_enteredEnemyRects[j][enemyToShootIndex]) + _enteredEnemyRects[j][enemyToShootIndex].Height / 2;
+                            l.Y2 = Canvas.GetTop(_towers[j]) + _towers[j].Height / 2;
+                            canvas.Children.Add(l);
+                            await _connection.InvokeAsync("DrawBulletForEnemy", l.X1, l.X2, l.Y1, l.Y2);
+
+                            await _connection.InvokeAsync("NearTower", _myRectangles.IndexOf(_enteredEnemyRects[j][enemyToShootIndex]), j, _connection.ConnectionId);
                         }
-                        else
-                        {
-                            towers[j]._shootingStyle = new HighestEnteredEnemyHealthShootingStyle();
-                        }
-
-                        //var enemyToShootIndex = towers[j]._shootingStyle.GetEnemyToShoot(player, j);
-
-                        //l.X1 = Canvas.GetLeft(_enteredEnemyRects[j][enemyToShootIndex]) + _enteredEnemyRects[j][enemyToShootIndex].Width / 2;
-                        //l.X2 = Canvas.GetLeft(_towers[j]) + _towers[j].Width / 2;
-                        //l.Y1 = Canvas.GetTop(_enteredEnemyRects[j][enemyToShootIndex]) + _enteredEnemyRects[j][enemyToShootIndex].Height / 2;
-                        //l.Y2 = Canvas.GetTop(_towers[j]) + _towers[j].Height / 2;
-                        //canvas.Children.Add(l);
-                        //await _connection.InvokeAsync("DrawBulletForEnemy", l.X1, l.X2, l.Y1, l.Y2);
-
-                        //await _connection.InvokeAsync("NearTower", _myRectangles.IndexOf(_enteredEnemyRects[j][enemyToShootIndex]), j, _connection.ConnectionId);
                     }
-                }
+                }             
                     
             });
 
@@ -381,16 +384,28 @@ namespace TowerDefense.Client
                 }
                 //await delayedWork();
             });
+
+            _connection.On<Player>("UndidTower", (player) =>
+            {
+                if (_connection.ConnectionId == player.ConnectionId)
+                {
+                    canvas.Children.Remove(_towers[^1]);
+                }
+                else
+                {
+                    enemyCanvas.Children.Remove(_towers[^1]);
+                }
+
+                _towers.RemoveAt(_towers.Count - 1);
+            });
         }
         private async void Create_Shooting_Enemy_Button_Click(object sender, RoutedEventArgs e)
         {
-            await _connection.InvokeAsync("CreateEnemy", "S", _nextEnemyAoeResistant);
-            _nextEnemyAoeResistant = false;
+            await _connection.InvokeAsync("CreateEnemy", "S");
         }
         private async void Create_Healing_Enemy_Button_Click(object sender, RoutedEventArgs e)
         {
-            await _connection.InvokeAsync("CreateEnemy", "H", _nextEnemyAoeResistant);
-            _nextEnemyAoeResistant = false;
+            await _connection.InvokeAsync("CreateEnemy", "H");
         }
 
         private async void Button1_Click(object sender, RoutedEventArgs e)
