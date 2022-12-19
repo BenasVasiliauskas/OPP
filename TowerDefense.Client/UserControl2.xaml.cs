@@ -94,6 +94,7 @@ namespace TowerDefense.Client
         {
             _connection.On<EnemyCollection, List<Tower>, Player, string>("Ticked", async (enemies, towers, player, contextId) =>
             {
+                Health.Content = player.Health;
                 foreach (var item in canvas.Children.OfType<Line>())
                 {
                     canvas.Children.Remove(item);
@@ -120,7 +121,7 @@ namespace TowerDefense.Client
                         {
                             canvas.Children.Remove(_myRectangles[i]);
                             _myRectangles.RemoveAt(i);
-                            await _connection.InvokeAsync("EnemySurvived", player.Enemies.GetEnemy(i), i);
+                            await _connection.InvokeAsync("EnemySurvived", player.Enemies.GetEnemy(i), i, _connection.ConnectionId);
                             return;
                         }
                     }
@@ -169,11 +170,14 @@ namespace TowerDefense.Client
 
                             var enemyToShootIndex = towers[j]._shootingStyle.GetEnemyToShoot(player, j);
 
+                            //here is a bug
                             l.X1 = Canvas.GetLeft(_enteredEnemyRects[j][enemyToShootIndex]) + _enteredEnemyRects[j][enemyToShootIndex].Width / 2;
                             l.X2 = Canvas.GetLeft(_towers[j]) + _towers[j].Width / 2;
                             l.Y1 = Canvas.GetTop(_enteredEnemyRects[j][enemyToShootIndex]) + _enteredEnemyRects[j][enemyToShootIndex].Height / 2;
                             l.Y2 = Canvas.GetTop(_towers[j]) + _towers[j].Height / 2;
-                            canvas.Children.Add(l);
+                            canvas.Children.Add(l);   
+                            //end of bug
+
                             await _connection.InvokeAsync("DrawBulletForEnemy", l.X1, l.X2, l.Y1, l.Y2);
 
                             await _connection.InvokeAsync("NearTower", _myRectangles.IndexOf(_enteredEnemyRects[j][enemyToShootIndex]), j, _connection.ConnectionId);
@@ -191,7 +195,7 @@ namespace TowerDefense.Client
 
             _connection.On<int, string>("EnemyKilled", (index, connectionId) =>
             {
-                if(_connection.ConnectionId == connectionId)
+                if (_connection.ConnectionId == connectionId)
                 {
                     canvas.Children.Remove(_myRectangles[index]);
                     _myRectangles.RemoveAt(index);
@@ -217,7 +221,7 @@ namespace TowerDefense.Client
                 l.Y2 = y2;
 
                 enemyCanvas.Children.Add(l);
-                await Task.Delay(10);
+                await Task.Delay(5);
                 foreach (var item in enemyCanvas.Children.OfType<Line>())
                 {
                     enemyCanvas.Children.Remove(item);

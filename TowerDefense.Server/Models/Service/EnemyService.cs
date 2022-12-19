@@ -19,6 +19,7 @@ namespace TowerDefense.Server.Models.Service
 
             Enemy enemy = (Enemy)unitFactory.CreateEnemy(enemyType);
 
+
             player.Subject.Attach(enemy);
             receiver.Enemies.AddEnemy(enemy as Enemy);
 

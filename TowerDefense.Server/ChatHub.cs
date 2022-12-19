@@ -145,12 +145,13 @@ namespace TowerDefense.Server
             await Clients.Others.SendAsync("DrawBullet", x1, x2, y1, y2);
         }
 
-        public async Task EnemySurvived(Enemy enemy, int index)
+        public async Task EnemySurvived(Enemy enemy, int index, string connectionId)
         {
             var player = _gameSession.GetSessionPlayers()
-                .Where(p => p.ConnectionId == Context.ConnectionId)
+                .Where(p => p.ConnectionId == connectionId)
                 .SingleOrDefault();
 
+            player.Health -= player.Enemies.GetEnemy(index).Damage;
             player.Enemies.RemoveEnemyAt(index);
 
             await Clients.Others.SendAsync("EnemyDeath", index, player.ConnectionId);

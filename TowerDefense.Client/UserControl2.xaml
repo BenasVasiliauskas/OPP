@@ -43,18 +43,17 @@
                             <Button Margin="20" Grid.Column="1" VerticalAlignment="Bottom" Click="Create_Healing_Enemy_Button_Click" Background="Transparent" BorderThickness="0">
                                 <Image Source="Images/Enemies/priest.png" />
                             </Button>
-                            <Button Grid.Column="2" Content="Power up" Click="PowerUp_Click"></Button>
-                            <Button Grid.Column="3" Content="Tower" Click="TowerButton_Click"></Button>
+                            <Button Grid.Column="3" Content="Power up" Click="PowerUp_Click" Margin="64,42,-57,20"/>
+                            <Button Grid.Column="3" Content="Tower" Click="TowerButton_Click" Margin="64,17,-57,45"></Button>
                         </Grid>
                         <Label Canvas.Left="316" Canvas.Top="48"/>
-                        <Button x:Name="Repay_Loan" Content="Repay Loan" Canvas.Left="291" Canvas.Top="39" Click="Repay_Loan_Click"/>
-                        <Button x:Name="Get_Loan" Content="Get a Loan" Canvas.Left="294" Canvas.Top="10" Click="Get_Loan_Click"/>
-                        <Label x:Name="player_money" Content="0" Canvas.Left="162" Canvas.Top="83"/>
-                        <Button x:Name="DoubleUp" Content="Double up" Canvas.Left="295" Canvas.Top="40" Click="DoubleUp_Click"/>
-                        <Button x:Name="Speed" Content="spyd" Canvas.Left="324" Canvas.Top="74" Click="Speed_Click"/>
+                        <Button x:Name="Repay_Loan" Content="Repay Loan" Canvas.Left="291" Canvas.Top="41" Click="Repay_Loan_Click"/>
+                        <Button x:Name="Get_Loan" Content="Get a Loan" Canvas.Left="291" Canvas.Top="17" Click="Get_Loan_Click"/>
+                        <Label x:Name="player_money" Content="0" Canvas.Left="168" Canvas.Top="28"/>
                         <TextBox x:Name="CommandBox" Canvas.Left="161" TextWrapping="Wrap" Canvas.Top="363" Width="192" HorizontalAlignment="Center" VerticalAlignment="Top" Height="29"/>
-                        <Button x:Name="SubmitCommand" Content="Submit" Canvas.Top="368" HorizontalAlignment="Left" VerticalAlignment="Center" Canvas.Left="65" Click="SubmitCommand_Click"/>
-                        <Button x:Name="UndoButton" Content="Undo" Canvas.Left="27" Canvas.Top="368" Click="UndoButton_Click"/>
+                        <Button x:Name="SubmitCommand" Content="Submit" Canvas.Top="368" HorizontalAlignment="Left" VerticalAlignment="Center" Canvas.Left="86" Click="SubmitCommand_Click"/>
+                        <Button x:Name="UndoButton" Content="Undo" Canvas.Left="20" Canvas.Top="368" Click="UndoButton_Click" RenderTransformOrigin="0.284,0.488" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        <Label x:Name="Health" Content="" Canvas.Left="330" Canvas.Top="90" RenderTransformOrigin="3.22,0.236"/>
                     </Canvas>
                 </Grid>
             </UserControl>

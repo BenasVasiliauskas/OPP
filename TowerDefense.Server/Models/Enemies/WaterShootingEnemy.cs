@@ -9,6 +9,7 @@ namespace TowerDefense.Server.Models.Enemies
             ImageSource = "/Images/Enemies/man-with-gun.png";
             Health = 2500;
             Speed = 10;
+            Damage = 2;
         }
     }
 }

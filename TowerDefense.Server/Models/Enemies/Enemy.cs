@@ -7,6 +7,7 @@ namespace TowerDefense.Server.Models.Enemies
     {
         public int MaxHealth { get; set; }
         public bool HasDead { get; set; }
+        public int Cost { get; set; }
         private State _state = null;
 
         public Enemy()
@@ -30,7 +31,7 @@ namespace TowerDefense.Server.Models.Enemies
         public Enemy MakeDeepCopy()
         {
             Enemy clone = (Enemy)MemberwiseClone();
-            clone.Health = MaxHealth / 2;
+            //clone.Health = MaxHealth / 2;
             return clone;
         }
 

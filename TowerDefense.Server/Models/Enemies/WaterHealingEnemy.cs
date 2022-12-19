@@ -9,6 +9,7 @@ namespace TowerDefense.Server.Models.Enemies
             ImageSource = "/Images/Enemies/priest.png";
             Speed = 10;
             Health = 10;
+            Damage = 1;
         }
     }
 }

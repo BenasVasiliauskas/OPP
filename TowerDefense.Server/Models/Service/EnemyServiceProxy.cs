@@ -18,16 +18,18 @@ namespace TowerDefense.Server.Models.Service
         {
             if (_cachedEnemies.Any() && session.CurrentGameLevel == _currentLevel && _cachedEnemies.ContainsKey(enemyType))
             {
-                receiver.Enemies.AddEnemy(_cachedEnemies[enemyType]);
+                var cloned = _cachedEnemies[enemyType].MakeDeepCopy();
+                receiver.Enemies.AddEnemy(cloned);
 
-                return _cachedEnemies[enemyType];
+                return cloned;
             }
 
             var enemy = _enemyService.CreateEnemy(session, enemyType, player, receiver);
 
             if (!_cachedEnemies.ContainsKey(enemyType))
             {
-                _cachedEnemies[enemyType] = enemy;
+                var cloned = enemy.MakeDeepCopy();
+                _cachedEnemies[enemyType] = cloned;
             }
 
             return enemy;
