@@ -19,7 +19,7 @@ namespace TowerDefense.Client.Mediators
 
         public void HandleButtonClick(object sender, RoutedEventArgs e)
         {
-            Trace.WriteLine("text");
+            Trace.WriteLine("Button was clicked");
         }
 
         public void UpdatePlayerMoney(int amount)

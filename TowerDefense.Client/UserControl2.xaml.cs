@@ -430,13 +430,13 @@ namespace TowerDefense.Client
 
                 await _connection.InvokeAsync("CreateTower", "S", newX, newY);
             }
-            _mediator.HandleButtonClick(sender, e);
 
         }
 
         private async void PowerUp_Click(object sender, RoutedEventArgs e)
         {
             await _connection.InvokeAsync("PowerUp");
+            _mediator.HandleButtonClick(sender, e);
         }
 
         private async void DoubleUp_Click(object sender, RoutedEventArgs e)

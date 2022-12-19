@@ -15,6 +15,7 @@ namespace TowerDefense.Server.Models
         public Subject Subject { get; set; } = new();
         public int Money { get; set; }
 
+
         public PlayerStateMemento CreateSnapshot()
         {
             return new PlayerStateMemento(new List<Tower>(Towers), Money);
