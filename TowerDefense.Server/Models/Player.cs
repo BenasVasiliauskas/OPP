@@ -16,6 +16,7 @@ namespace TowerDefense.Server.Models
         public int Money { get; set; } = 1000;
         public int Health { get; set; } = 100;
 
+
         public PlayerStateMemento CreateSnapshot()
         {
             return new PlayerStateMemento(new List<Tower>(Towers), Money);

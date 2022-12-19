@@ -19,6 +19,7 @@ using TowerDefense.Server.Models.Iterator;
 using TowerDefense.Server.Models.Maps;
 using TowerDefense.Server.Models.Strategies;
 using TowerDefense.Server.Models.Towers;
+using TowerDefense.Client.Mediators;
 
 namespace TowerDefense.Client
 {
@@ -40,6 +41,8 @@ namespace TowerDefense.Client
         private List<List<Unit>> _enteredEnemies = new();
         private List<List<Rectangle>> _enteredEnemyRects = new();
 
+        private Mediator _mediator;
+
         DispatcherTimer gameTimer = new();
 
         public UserControl2(HubConnection connection, List<MovePoint> path, List<MovePoint> tiles)
@@ -47,6 +50,7 @@ namespace TowerDefense.Client
             InitializeComponent();
             _connection = connection;
             _path = path;
+            _mediator = new Mediator(this);
 
             foreach (var item in tiles)
             {
@@ -414,6 +418,8 @@ namespace TowerDefense.Client
         private void TowerButton_Click(object sender, RoutedEventArgs e)
         {
             _towerBuildSelected = true;
+            _mediator.HandleButtonClick(sender, e);
+
         }
 
         private async void Canvas_Click(object sender, MouseButtonEventArgs e)
@@ -428,11 +434,13 @@ namespace TowerDefense.Client
 
                 await _connection.InvokeAsync("CreateTower", "S", newX, newY);
             }
+
         }
 
         private async void PowerUp_Click(object sender, RoutedEventArgs e)
         {
             await _connection.InvokeAsync("PowerUp");
+            _mediator.HandleButtonClick(sender, e);
         }
 
         private async void DoubleUp_Click(object sender, RoutedEventArgs e)
